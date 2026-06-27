@@ -2,6 +2,9 @@ require('dotenv').config();
 
 const express = require('express');
 const sequelize = require('./config/database');
+const db = require('./models');
+
+console.log(Object.keys(db));
 
 const app = express();
 
@@ -15,11 +18,14 @@ app.get('/', (req, res) => {
 });
 
 sequelize.authenticate()
-    .then(() => {
+    .then(async () => {
         console.log('Database connection established successfully.');
+
+        const userCount = await db.User.count();
+        console.log('Users:', userCount);
     })
     .catch((error) => {
-        console.error('Unable to connect to the database:', error.message);
+        console.error(error);
     });
 
 app.listen(PORT, () => {
