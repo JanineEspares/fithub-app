@@ -6,6 +6,7 @@ const db = require('./models');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const errorHandler = require('./middleware/errorHandler');
+const productRoutes = require('./routes/productRoutes');
 
 console.log(Object.keys(db));
 
@@ -19,6 +20,7 @@ app.use(express.json());
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/products', productRoutes);
 
 // Default Route
 app.get('/', (req, res) => {
