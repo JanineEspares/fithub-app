@@ -23,6 +23,116 @@ exports.index = async (req, res, next) => {
 
 };
 
+exports.show = async (req, res, next) => {
+
+    try {
+
+        const product = await productService.getProductById(req.params.id);
+
+        if (!product) {
+
+            return apiResponse.error(
+                res,
+                404,
+                'Product not found.'
+            );
+
+        }
+
+        return apiResponse.success(
+            res,
+            200,
+            'Product retrieved successfully.',
+            product
+        );
+
+    } catch (err) {
+
+        next(err);
+
+    }
+
+};
+
+exports.update = async (req, res, next) => {
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+
+        return apiResponse.error(
+            res,
+            400,
+            'Validation failed.',
+            errors.array()
+        );
+
+    }
+
+    try {
+
+        const product = await productService.updateProduct(
+            req.params.id,
+            req.body
+        );
+
+        if (!product) {
+
+            return apiResponse.error(
+                res,
+                404,
+                'Product not found.'
+            );
+
+        }
+
+        return apiResponse.success(
+            res,
+            200,
+            'Product updated successfully.',
+            product
+        );
+
+    } catch (err) {
+
+        next(err);
+
+    }
+
+};
+
+exports.deleteProduct = async (req, res, next) => {
+
+    try {
+
+        const deleted = await productService.deleteProduct(
+            req.params.id
+        );
+
+        if (!deleted) {
+
+            return apiResponse.error(
+                res,
+                404,
+                'Product not found.'
+            );
+
+        }
+
+        return apiResponse.success(
+            res,
+            200,
+            'Product deleted successfully.'
+        );
+
+    } catch (err) {
+
+        next(err);
+
+    }
+
+};
+
 exports.createProduct = async (req, res, next) => {
 
     const errors = validationResult(req);

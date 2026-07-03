@@ -6,6 +6,12 @@ exports.getAllProducts = async () => {
 
 };
 
+exports.getProductById = async (id) => {
+
+    return await db.Product.findByPk(id);
+
+};
+
 exports.createProduct = async (productData) => {
 
     return await db.Product.create({
@@ -21,3 +27,42 @@ exports.createProduct = async (productData) => {
     });
 
 };
+
+exports.updateProduct = async (id, productData) => {
+
+    const product = await db.Product.findByPk(id);
+
+    if (!product) {
+        return null;
+    }
+
+    await product.update({
+
+        category_id: productData.category_id,
+
+        name: productData.name,
+
+        description: productData.description,
+
+        base_price: productData.base_price
+
+    });
+
+    return product;
+
+};
+
+exports.deleteProduct = async (id) => {
+
+    const product = await db.Product.findByPk(id);
+
+    if (!product) {
+        return null;
+    }
+
+    await product.destroy();
+
+    return true;
+
+};
+

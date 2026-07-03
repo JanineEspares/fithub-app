@@ -5,19 +5,18 @@ const router = express.Router();
 const categoryController = require('../controllers/categoryController');
 
 const authenticate = require('../middleware/authMiddleware');
-
 const authorizeAdmin = require('../middleware/adminMiddleware');
 
-router.post(
-
+router.get(
     '/',
+    categoryController.getAllCategories
+);
 
+router.post(
+    '/',
     authenticate,
-
     authorizeAdmin,
-
-    categoryController.create
-
+    categoryController.createCategory
 );
 
 module.exports = router;

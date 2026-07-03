@@ -24,6 +24,11 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: true
             },
 
+            base_price: {
+                type: DataTypes.DECIMAL(10, 2),
+                allowNull: false
+            },
+
             brand: {
                 type: DataTypes.STRING(100),
                 allowNull: true
