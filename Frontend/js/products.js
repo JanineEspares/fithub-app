@@ -21,26 +21,75 @@ $(function () {
   `;
 
   if ($('#products-table').length) {
+    const refreshProducts = () => {
+      $.ajax({
+        url: `${window.FitHubConfig.apiBaseUrl}/products`,
+        method: 'GET',
+        headers: window.FitHubUtils.authHeaders()
+      }).done((response) => {
+        const rows = response.data || [];
+        const table = $('#products-table').DataTable();
+        table.clear().rows.add(rows).draw();
+      });
+    };
+
     window.FitHubUtils.initDataTable('#products-table', {
-      ajax: function (data, callback) {
-        $.ajax({
-          url: `${window.FitHubConfig.apiBaseUrl}/products`,
-          method: 'GET',
-          headers: window.FitHubUtils.authHeaders()
-        }).done((response) => {
-          callback({ data: response.data || [] });
-        }).fail(() => {
-          callback({ data: [] });
-        });
-      },
+      data: [],
       columns: [
         { data: 'id' },
         { data: 'name' },
-        { data: 'base_price' },
-        { data: 'status' },
-        { data: null, render: () => '<button class="btn btn-sm btn-brand">View</button>' }
+        { data: 'base_price', render: (value) => `$${Number(value || 0).toFixed(2)}` },
+        { data: 'status', render: (value) => (value || 'active').toString().replace(/_/g, ' ') },
+        { data: null, render: (data, type, row) => `<button class="btn btn-sm btn-brand" data-delete-product="${row.id}">Delete</button>` }
       ]
     });
+
+    refreshProducts();
+
+    $(document).on('click', '[data-delete-product]', function () {
+      const id = $(this).data('delete-product');
+      window.FitHubUtils.apiRequest(`/products/${id}`, { method: 'DELETE' }).done(() => refreshProducts());
+    });
+  }
+
+  $('#product-form').on('submit', function (event) {
+    event.preventDefault();
+    const payload = Object.fromEntries(new FormData(this).entries());
+    window.FitHubUtils.apiRequest('/products', {
+      method: 'POST',
+      data: payload
+    }).done(() => {
+      $('#productModal').modal('hide');
+      this.reset();
+      if ($('#products-table').length) {
+        refreshProducts();
+      }
+    });
+  });
+
+  if ($('#category-list').length) {
+    const renderCategories = () => {
+      window.FitHubUtils.apiRequest('/categories').done((response) => {
+        const categories = response.data || [];
+        $('#category-list').html(categories.map((category) => `
+          <span class="badge rounded-pill bg-light text-dark px-3 py-2">${category.name}</span>
+        `).join(''));
+      });
+    };
+
+    $('#category-form').on('submit', function (event) {
+      event.preventDefault();
+      const payload = Object.fromEntries(new FormData(this).entries());
+      window.FitHubUtils.apiRequest('/categories', {
+        method: 'POST',
+        data: payload
+      }).done(() => {
+        this.reset();
+        renderCategories();
+      });
+    });
+
+    renderCategories();
   }
 
   if ($('#shop-products-grid').length) {
