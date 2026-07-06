@@ -6,6 +6,7 @@ const productController = require('../controllers/productController');
 
 const authenticate = require('../middleware/authMiddleware');
 const authorizeAdmin = require('../middleware/adminMiddleware');
+const upload = require('../middleware/uploadMiddleware');
 
 const productValidator = require('../validators/productValidator');
 
@@ -23,6 +24,7 @@ router.post(
     '/',
     authenticate,
     authorizeAdmin,
+    upload.array('images', 5),
     productValidator,
     productController.createProduct
 );

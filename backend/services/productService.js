@@ -66,3 +66,9 @@ exports.deleteProduct = async (id) => {
 
 };
 
+exports.attachProductImages = async (images) => {
+
+    return await db.ProductImage.bulkCreate(images);
+
+};
+

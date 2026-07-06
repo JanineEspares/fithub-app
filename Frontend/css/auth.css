@@ -1,0 +1,31 @@
+﻿body[data-page='login'] main,
+body[data-page='register'] main,
+body[data-page='profile'] main {
+  max-width: 760px;
+}
+
+.auth-card {
+  max-width: 520px;
+  margin: 1rem auto;
+  border: 1px solid #e0e7f5;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 16px 42px rgba(20, 38, 72, 0.12);
+  padding: 1.25rem;
+}
+
+.auth-title {
+  font-family: 'Space Grotesk', sans-serif;
+  margin-bottom: 0.5rem;
+}
+
+.auth-helper {
+  color: #5d6b84;
+  margin-bottom: 1rem;
+}
+
+.validation-error {
+  font-size: 0.82rem;
+  color: #b42318;
+  margin-top: 0.35rem;
+}

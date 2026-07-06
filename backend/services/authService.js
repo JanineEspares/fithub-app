@@ -56,6 +56,10 @@ exports.loginUser = async (email, password) => {
         return null;
     }
 
+    if (user.status !== 'active') {
+        return null;
+    }
+
     const token = jwt.sign(
         {
             id: user.id,
@@ -68,6 +72,10 @@ exports.loginUser = async (email, password) => {
             expiresIn: process.env.JWT_EXPIRES_IN
         }
     );
+
+    await user.update({
+        jwt_token: token
+    });
 
     return {
         token,

@@ -152,6 +152,16 @@ exports.createProduct = async (req, res, next) => {
 
         const product = await productService.createProduct(req.body);
 
+        if (req.files && req.files.length > 0) {
+            const images = req.files.map((file, index) => ({
+                product_id: product.id,
+                image_path: file.path,
+                is_primary: index === 0
+            }));
+
+            await productService.attachProductImages(images);
+        }
+
         return apiResponse.success(
             res,
             201,

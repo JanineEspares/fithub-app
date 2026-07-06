@@ -1,0 +1,64 @@
+window.FitHubUtils = {
+  getToken() {
+    return localStorage.getItem(window.FitHubConfig.tokenKey);
+  },
+  getUser() {
+    const value = localStorage.getItem(window.FitHubConfig.userKey);
+    return value ? JSON.parse(value) : null;
+  },
+  setSession(payload) {
+    localStorage.setItem(window.FitHubConfig.tokenKey, payload.token);
+    localStorage.setItem(window.FitHubConfig.userKey, JSON.stringify(payload.user));
+  },
+  clearSession() {
+    localStorage.removeItem(window.FitHubConfig.tokenKey);
+    localStorage.removeItem(window.FitHubConfig.userKey);
+  },
+  authHeaders() {
+    const token = this.getToken();
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  },
+  apiRequest(url, options = {}) {
+    return $.ajax({
+      url: `${window.FitHubConfig.apiBaseUrl}${url}`,
+      method: options.method || 'GET',
+      data: options.data ? JSON.stringify(options.data) : undefined,
+      contentType: options.contentType === false ? false : 'application/json',
+      processData: options.processData ?? true,
+      headers: {
+        ...this.authHeaders(),
+        ...(options.headers || {})
+      }
+    });
+  },
+  loadPartials(callback) {
+    $('#app-header').load('partials/header.html', () => {
+      if (typeof callback === 'function') {
+        callback();
+      }
+    });
+    $('#app-footer').load('partials/footer.html');
+  },
+  requireAdminAccess(redirectUrl = 'home.html') {
+    const user = this.getUser();
+
+    if (!user || user.role !== 'admin') {
+      window.location.replace(redirectUrl);
+      return false;
+    }
+
+    return true;
+  },
+  initDataTable(selector, options = {}) {
+    if (!$.fn.DataTable || !$(selector).length) {
+      return null;
+    }
+    return $(selector).DataTable({
+      paging: false,
+      info: false,
+      lengthChange: false,
+      order: [],
+      ...options
+    });
+  }
+};

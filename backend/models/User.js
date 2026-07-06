@@ -30,10 +30,20 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false
             },
 
+            jwt_token: {
+                type: DataTypes.TEXT,
+                allowNull: true
+            },
+
             role: {
                 type: DataTypes.ENUM('admin', 'customer'),
                 defaultValue: 'customer',
                 allowNull: false
+            },
+
+            role_id: {
+                type: DataTypes.INTEGER,
+                allowNull: true
             },
 
             status: {

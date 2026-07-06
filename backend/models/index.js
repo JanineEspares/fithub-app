@@ -6,6 +6,7 @@ const db = {};
 db.sequelize = sequelize;
 
 db.User = require('./User')(sequelize, DataTypes);
+db.Role = require('./Role')(sequelize, DataTypes);
 db.Category = require('./Category')(sequelize, DataTypes);
 
 db.Product = require('./Product')(sequelize, DataTypes);
@@ -19,12 +20,25 @@ db.CartItem = require('./CartItem')(sequelize, DataTypes);
 db.Order = require('./Order')(sequelize, DataTypes);
 db.OrderItem = require('./OrderItem')(sequelize, DataTypes);
 db.Payment = require('./Payment')(sequelize, DataTypes);
+db.Transaction = require('./Transaction')(sequelize, DataTypes);
+db.Inventory = require('./Inventory')(sequelize, DataTypes);
+db.ActivityLog = require('./ActivityLog')(sequelize, DataTypes);
 
 db.Review = require('./Review')(sequelize, DataTypes);
 
 // ========================================
 // Model Associations
 // ========================================
+
+db.Role.hasMany(db.User, {
+    foreignKey: 'role_id',
+    as: 'users'
+});
+
+db.User.belongsTo(db.Role, {
+    foreignKey: 'role_id',
+    as: 'roleData'
+});
 
 // ========================================
 // Foundation
@@ -162,6 +176,46 @@ db.Order.hasMany(db.Payment, {
 db.Payment.belongsTo(db.Order, {
     foreignKey: 'order_id',
     as: 'order'
+});
+
+db.Order.hasMany(db.Transaction, {
+    foreignKey: 'order_id',
+    as: 'transactions'
+});
+
+db.Transaction.belongsTo(db.Order, {
+    foreignKey: 'order_id',
+    as: 'order'
+});
+
+db.User.hasMany(db.Transaction, {
+    foreignKey: 'user_id',
+    as: 'transactions'
+});
+
+db.Transaction.belongsTo(db.User, {
+    foreignKey: 'user_id',
+    as: 'user'
+});
+
+db.ProductVariant.hasOne(db.Inventory, {
+    foreignKey: 'product_variant_id',
+    as: 'inventory'
+});
+
+db.Inventory.belongsTo(db.ProductVariant, {
+    foreignKey: 'product_variant_id',
+    as: 'productVariant'
+});
+
+db.User.hasMany(db.ActivityLog, {
+    foreignKey: 'user_id',
+    as: 'activityLogs'
+});
+
+db.ActivityLog.belongsTo(db.User, {
+    foreignKey: 'user_id',
+    as: 'user'
 });
 
 // ========================================
