@@ -1,5 +1,37 @@
 const db = require('../models');
 
+const resolveCartVariant = async (productId, fallbackVariantId) => {
+    if (fallbackVariantId) {
+        return await db.ProductVariant.findByPk(fallbackVariantId);
+    }
+
+    if (!productId) {
+        return null;
+    }
+
+    const product = await db.Product.findByPk(productId);
+    if (!product) {
+        return null;
+    }
+
+    let variant = await db.ProductVariant.findOne({
+        where: { product_id: product.id, status: 'active' }
+    });
+
+    if (!variant) {
+        variant = await db.ProductVariant.create({
+            product_id: product.id,
+            variant_name: 'Default',
+            sku: `SKU-${product.id}-${Date.now()}`,
+            price: product.base_price,
+            stock_quantity: 100,
+            status: 'active'
+        });
+    }
+
+    return variant;
+};
+
 exports.getCart = async (req, res, next) => {
     try {
         const cart = await db.Cart.findOne({
@@ -37,9 +69,18 @@ exports.addToCart = async (req, res, next) => {
             });
         }
 
+        const variant = await resolveCartVariant(req.body.product_id, req.body.product_variant_id);
+
+        if (!variant) {
+            return res.status(400).json({
+                success: false,
+                message: 'Unable to resolve a product variant for this item.'
+            });
+        }
+
         const item = await db.CartItem.create({
             cart_id: cart.id,
-            product_variant_id: req.body.product_variant_id,
+            product_variant_id: variant.id,
             quantity: req.body.quantity || 1
         });
 

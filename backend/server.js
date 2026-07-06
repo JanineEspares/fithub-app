@@ -11,10 +11,12 @@ const productRoutes = require('./routes/productRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 const reportRoutes = require('./routes/reportRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 
 const errorHandler = require('./middleware/errorHandler');
+const seed = require('./seed');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -35,6 +37,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/carts', cartRoutes);
+app.use('/api/orders', orderRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/dashboard', dashboardRoutes);
@@ -45,6 +48,7 @@ sequelize.authenticate()
     .then(async () => {
         console.log('Database connection established successfully.');
         await db.sequelize.sync();
+        await seed();
         app.listen(PORT, () => {
             console.log(`Express server listening on port ${PORT}`);
         });

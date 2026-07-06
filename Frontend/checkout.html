@@ -30,22 +30,22 @@
           <h2 class="section-title mb-3">Shipping and payment</h2>
           <form class="d-grid gap-3" id="checkout-form">
             <div class="row g-3">
-              <div class="col-md-6"><label class="form-label">Full name</label><input class="form-control form-control-lg" type="text" required></div>
-              <div class="col-md-6"><label class="form-label">Contact number</label><input class="form-control form-control-lg" type="tel" required></div>
+              <div class="col-md-6"><label class="form-label">Full name</label><input class="form-control form-control-lg" name="recipient_name" type="text" required></div>
+              <div class="col-md-6"><label class="form-label">Contact number</label><input class="form-control form-control-lg" name="contact_number" type="tel" required></div>
             </div>
-            <div><label class="form-label">Address</label><input class="form-control form-control-lg" type="text" required></div>
+            <div><label class="form-label">Address</label><input class="form-control form-control-lg" name="address_line" type="text" required></div>
             <div class="row g-3">
-              <div class="col-md-4"><label class="form-label">City</label><input class="form-control form-control-lg" type="text" required></div>
-              <div class="col-md-4"><label class="form-label">Province</label><input class="form-control form-control-lg" type="text" required></div>
-              <div class="col-md-4"><label class="form-label">Postal code</label><input class="form-control form-control-lg" type="text" required></div>
+              <div class="col-md-4"><label class="form-label">City</label><input class="form-control form-control-lg" name="city" type="text" required></div>
+              <div class="col-md-4"><label class="form-label">Province</label><input class="form-control form-control-lg" name="province" type="text" required></div>
+              <div class="col-md-4"><label class="form-label">Postal code</label><input class="form-control form-control-lg" name="postal_code" type="text" required></div>
             </div>
             <div>
               <label class="form-label">Payment method</label>
-              <select class="form-select form-select-lg">
-                <option>Cash on delivery</option>
-                <option>GCash</option>
-                <option>Maya</option>
-                <option>Card</option>
+              <select class="form-select form-select-lg" name="payment_method">
+                <option value="cod">Cash on delivery</option>
+                <option value="gcash">GCash</option>
+                <option value="maya">Maya</option>
+                <option value="card">Card</option>
               </select>
             </div>
             <button class="btn btn-brand btn-lg" type="submit">Place order</button>

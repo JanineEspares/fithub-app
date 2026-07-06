@@ -3,7 +3,7 @@ $(function () {
   window.FitHubUtils.initDataTable('#orders-table', {
     ajax: function (data, callback) {
       $.ajax({
-        url: `${window.FitHubConfig.apiBaseUrl}/transactions`,
+        url: `${window.FitHubConfig.apiBaseUrl}/orders`,
         method: 'GET',
         headers: window.FitHubUtils.authHeaders()
       }).done((response) => {
@@ -12,10 +12,10 @@ $(function () {
     },
     columns: [
       { data: 'id' },
-      { data: 'order.order_number', defaultContent: '-' },
-      { data: 'user.email', defaultContent: '-' },
-      { data: 'status' },
-      { data: null, render: () => '<button class="btn btn-sm btn-outline-brand">View</button>' }
+      { data: 'order_number', defaultContent: '-' },
+      { data: 'recipient_name', defaultContent: '-' },
+      { data: 'status', defaultContent: '-' },
+      { data: null, render: (data) => `<span class="text-muted">$${Number(data.total_amount || 0).toFixed(2)}</span>` }
     ]
   });
 });
