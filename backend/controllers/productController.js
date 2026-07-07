@@ -25,7 +25,7 @@ exports.listProducts = async (req, res, next) => {
             res,
             200,
             'Products retrieved successfully.',
-            result
+            products
         );
     } catch (err) {
         next(err);
