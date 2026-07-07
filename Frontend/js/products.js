@@ -5,6 +5,67 @@ $(function () {
     return;
   }
 
+  const productModalElement = document.getElementById('productModal');
+  const productModal = productModalElement && window.bootstrap ? new bootstrap.Modal(productModalElement) : null;
+  const $productForm = $('#product-form');
+  const $productAlert = $('#product-form-alert');
+  const $productTitle = $('#productModalLabel');
+  const $productSubmit = $('#product-form-submit');
+  const $productImagesWrapper = $('#product-images-wrapper');
+  const $productImages = $('#product-images');
+  const $productId = $('#product-id');
+  const $productCategoryId = $('#product-category-id');
+  const $productName = $('#product-name');
+  const $productDescription = $('#product-description');
+  const $productBasePrice = $('#product-base-price');
+  let productTable = null;
+
+  const showAlert = (message, type = 'danger') => {
+    $productAlert
+      .removeClass('d-none alert-danger alert-success alert-warning')
+      .addClass(`alert-${type}`)
+      .text(message);
+  };
+
+  const clearAlert = () => {
+    $productAlert.addClass('d-none').removeClass('alert-danger alert-success alert-warning').text('');
+  };
+
+  const resetForm = () => {
+    $productForm[0].reset();
+    $productId.val('');
+    clearAlert();
+  };
+
+  const openCreateModal = () => {
+    resetForm();
+    $productTitle.text('Add Product');
+    $productSubmit.text('Save Product');
+    $productForm.data('mode', 'create');
+    $productImagesWrapper.show();
+    if (productModal) productModal.show();
+  };
+
+  const openEditModal = (product) => {
+    resetForm();
+    $productTitle.text('Edit Product');
+    $productSubmit.text('Update Product');
+    $productForm.data('mode', 'edit');
+    $productId.val(product.id);
+    $productCategoryId.val(product.category_id || '');
+    $productName.val(product.name || '');
+    $productDescription.val(product.description || '');
+    $productBasePrice.val(product.base_price || '');
+    $productImagesWrapper.hide();
+    if (productModal) productModal.show();
+  };
+
+  const reloadProducts = () => {
+    if (productTable) {
+      productTable.ajax.reload(null, false);
+    }
+  };
+
   const productCard = (product) => `
     <article class="product-card">
       <div class="product-body">
@@ -21,75 +82,120 @@ $(function () {
   `;
 
   if ($('#products-table').length) {
-    const refreshProducts = () => {
-      $.ajax({
-        url: `${window.FitHubConfig.apiBaseUrl}/products`,
-        method: 'GET',
-        headers: window.FitHubUtils.authHeaders()
-      }).done((response) => {
-        const rows = response.data || [];
-        const table = $('#products-table').DataTable();
-        table.clear().rows.add(rows).draw();
-      });
-    };
-
-    window.FitHubUtils.initDataTable('#products-table', {
-      data: [],
+    productTable = window.FitHubUtils.initDataTable('#products-table', {
+      ajax: function (data, callback) {
+        $.ajax({
+          url: `${window.FitHubConfig.apiBaseUrl}/products`,
+          method: 'GET',
+          headers: window.FitHubUtils.authHeaders()
+        }).done((response) => {
+          callback({ data: response.data || [] });
+        }).fail(() => {
+          callback({ data: [] });
+        });
+      },
       columns: [
         { data: 'id' },
         { data: 'name' },
-        { data: 'base_price', render: (value) => `$${Number(value || 0).toFixed(2)}` },
-        { data: 'status', render: (value) => (value || 'active').toString().replace(/_/g, ' ') },
-        { data: null, render: (data, type, row) => `<button class="btn btn-sm btn-brand" data-delete-product="${row.id}">Delete</button>` }
+        { data: 'base_price' },
+        { data: 'status' },
+        {
+          data: null,
+          orderable: false,
+          searchable: false,
+          render: (data, type, row) => `
+            <div class="d-flex flex-wrap gap-2">
+              <button type="button" class="btn btn-sm btn-outline-brand js-view-product" data-id="${row.id}">View</button>
+              <button type="button" class="btn btn-sm btn-brand js-edit-product" data-id="${row.id}">Edit</button>
+              <button type="button" class="btn btn-sm btn-outline-danger js-delete-product" data-id="${row.id}">Delete</button>
+            </div>
+          `
+        }
       ]
     });
 
-    refreshProducts();
+    $('#add-product-btn').on('click', openCreateModal);
 
-    $(document).on('click', '[data-delete-product]', function () {
-      const id = $(this).data('delete-product');
-      window.FitHubUtils.apiRequest(`/products/${id}`, { method: 'DELETE' }).done(() => refreshProducts());
+    $(document).on('click', '.js-view-product', function () {
+      const productId = $(this).data('id');
+      window.location.href = `item.html?id=${productId}`;
     });
-  }
 
-  $('#product-form').on('submit', function (event) {
-    event.preventDefault();
-    const payload = Object.fromEntries(new FormData(this).entries());
-    window.FitHubUtils.apiRequest('/products', {
-      method: 'POST',
-      data: payload
-    }).done(() => {
-      $('#productModal').modal('hide');
-      this.reset();
-      if ($('#products-table').length) {
-        refreshProducts();
+    $(document).on('click', '.js-edit-product', function () {
+      const productId = $(this).data('id');
+      clearAlert();
+
+      window.FitHubUtils.apiRequest(`/products/${productId}`)
+        .done((response) => {
+          const product = response.data || {};
+          openEditModal(product);
+        })
+        .fail((xhr) => {
+          showAlert(xhr.responseJSON?.message || 'Unable to load product details.');
+        });
+    });
+
+    $(document).on('click', '.js-delete-product', function () {
+      const productId = $(this).data('id');
+      if (!window.confirm('Delete this product?')) {
+        return;
       }
+
+      window.FitHubUtils.apiRequest(`/products/${productId}`, { method: 'DELETE' })
+        .done(() => {
+          reloadProducts();
+        })
+        .fail((xhr) => {
+          alert(xhr.responseJSON?.message || 'Unable to delete product.');
+        });
     });
-  });
 
-  if ($('#category-list').length) {
-    const renderCategories = () => {
-      window.FitHubUtils.apiRequest('/categories').done((response) => {
-        const categories = response.data || [];
-        $('#category-list').html(categories.map((category) => `
-          <span class="badge rounded-pill bg-light text-dark px-3 py-2">${category.name}</span>
-        `).join(''));
-      });
-    };
-
-    $('#category-form').on('submit', function (event) {
+    $productForm.on('submit', function (event) {
       event.preventDefault();
-      const payload = Object.fromEntries(new FormData(this).entries());
-      window.FitHubUtils.apiRequest('/categories', {
-        method: 'POST',
-        data: payload
-      }).done(() => {
-        this.reset();
-        renderCategories();
-      });
-    });
+      clearAlert();
 
-    renderCategories();
+      const mode = $productForm.data('mode');
+      const productId = $productId.val();
+
+      if (mode === 'create') {
+        const formData = new FormData(this);
+
+        $.ajax({
+          url: `${window.FitHubConfig.apiBaseUrl}/products`,
+          method: 'POST',
+          headers: window.FitHubUtils.authHeaders(),
+          data: formData,
+          processData: false,
+          contentType: false
+        })
+          .done(() => {
+            if (productModal) productModal.hide();
+            reloadProducts();
+          })
+          .fail((xhr) => {
+            showAlert(xhr.responseJSON?.message || 'Unable to create product.');
+          });
+
+        return;
+      }
+
+      window.FitHubUtils.apiRequest(`/products/${productId}`, {
+        method: 'PUT',
+        data: {
+          category_id: $productCategoryId.val(),
+          name: $productName.val(),
+          description: $productDescription.val(),
+          base_price: $productBasePrice.val()
+        }
+      })
+        .done(() => {
+          if (productModal) productModal.hide();
+          reloadProducts();
+        })
+        .fail((xhr) => {
+          showAlert(xhr.responseJSON?.message || 'Unable to update product.');
+        });
+    });
   }
 
   if ($('#shop-products-grid').length) {

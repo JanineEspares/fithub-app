@@ -76,7 +76,10 @@ exports.create = async (req, res, next) => {
 exports.update = async (req, res, next) => {
     try {
         const transaction = await db.Transaction.findByPk(req.params.id, {
-            include: [{ model: db.User, as: 'user', attributes: ['id', 'first_name', 'last_name', 'email'] }]
+            include: [
+                { model: db.User, as: 'user', attributes: ['id', 'first_name', 'last_name', 'email'] },
+                { model: db.Order, as: 'order', attributes: ['id', 'order_number', 'recipient_name', 'total_amount', 'status'] }
+            ]
         });
 
         if (!transaction) {
@@ -92,13 +95,43 @@ exports.update = async (req, res, next) => {
             payment_method: req.body.payment_method || transaction.payment_method
         });
 
+        if (transaction.order) {
+
+            let orderStatus = transaction.order.status;
+
+            switch (transaction.status) {
+
+                case 'paid':
+                    orderStatus = 'processing';
+                    break;
+
+                case 'failed':
+                    orderStatus = 'cancelled';
+                    break;
+
+                case 'refunded':
+                    orderStatus = 'cancelled';
+                    break;
+
+                default:
+                    orderStatus = 'pending';
+
+            }
+
+            await transaction.order.update({
+                status: orderStatus
+            });
+
+        }
+
         const receiptPath = await generateReceiptPdf({
             transaction,
-            user: transaction.user
+            user: transaction.user,
+            order: transaction.order
         });
 
         await sendTransactionUpdate({
-            to: transaction.user ? transaction.user.email : null,
+            to: transaction.user.email,
             subject: `FitHub Transaction Update #${transaction.id}`,
             text: `Your transaction status is now ${transaction.status}.`,
             html: `<p>Your transaction status is now <strong>${transaction.status}</strong>.</p>`,
@@ -110,7 +143,7 @@ exports.update = async (req, res, next) => {
 
         res.status(200).json({
             success: true,
-            message: 'Transaction updated. Email notification sent with receipt.',
+            message: 'Transaction updated successfully.',
             data: transaction
         });
     } catch (error) {

@@ -1,5 +1,12 @@
 require('dotenv').config();
 
+console.log({
+    MAIL_HOST: process.env.MAIL_HOST,
+    MAIL_PORT: process.env.MAIL_PORT,
+    MAIL_USER: process.env.MAIL_USER ? 'Loaded' : 'Missing',
+    MAIL_PASS: process.env.MAIL_PASS ? 'Loaded' : 'Missing'
+});
+
 const express = require('express');
 const cors = require('cors');
 const sequelize = require('./config/database');
@@ -10,6 +17,7 @@ const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const cartRoutes = require('./routes/cartRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
@@ -23,6 +31,18 @@ const seed = require('./seed');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
+
+const ensureUserJwtTokenColumn = async () => {
+    const queryInterface = db.sequelize.getQueryInterface();
+    const tableDescription = await queryInterface.describeTable('users');
+
+    if (!Object.prototype.hasOwnProperty.call(tableDescription, 'jwt_token')) {
+        await queryInterface.addColumn('users', 'jwt_token', {
+            type: require('sequelize').DataTypes.TEXT,
+            allowNull: true
+        });
+    }
+};
 
 app.use(cors());
 app.use(express.json());
@@ -55,6 +75,7 @@ sequelize.authenticate()
         console.log('Database connection established successfully.');
         await db.sequelize.sync();
         await seed();
+        await ensureUserJwtTokenColumn();
         app.listen(PORT, () => {
             console.log(`Express server listening on port ${PORT}`);
         });

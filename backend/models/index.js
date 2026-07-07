@@ -10,7 +10,6 @@ db.Role = require('./Role')(sequelize, DataTypes);
 db.Category = require('./Category')(sequelize, DataTypes);
 
 db.Product = require('./Product')(sequelize, DataTypes);
-db.ProductVariant = require('./ProductVariant')(sequelize, DataTypes);
 db.ProductImage = require('./ProductImage')(sequelize, DataTypes);
 
 db.ShippingAddress = require('./ShippingAddress')(sequelize, DataTypes);
@@ -25,20 +24,6 @@ db.Inventory = require('./Inventory')(sequelize, DataTypes);
 db.ActivityLog = require('./ActivityLog')(sequelize, DataTypes);
 
 db.Review = require('./Review')(sequelize, DataTypes);
-
-// ========================================
-// Model Associations
-// ========================================
-
-db.Role.hasMany(db.User, {
-    foreignKey: 'role_id',
-    as: 'users'
-});
-
-db.User.belongsTo(db.Role, {
-    foreignKey: 'role_id',
-    as: 'roleData'
-});
 
 // ========================================
 // Foundation
@@ -58,17 +43,6 @@ db.Product.belongsTo(db.Category, {
 // ========================================
 // Product Catalog
 // ========================================
-
-// Product -> Product Variants
-db.Product.hasMany(db.ProductVariant, {
-    foreignKey: 'product_id',
-    as: 'variants'
-});
-
-db.ProductVariant.belongsTo(db.Product, {
-    foreignKey: 'product_id',
-    as: 'product'
-});
 
 // Product -> Product Images
 db.Product.hasMany(db.ProductImage, {
@@ -119,15 +93,15 @@ db.CartItem.belongsTo(db.Cart, {
     as: 'cart'
 });
 
-// Product Variant -> Cart Items
-db.ProductVariant.hasMany(db.CartItem, {
-    foreignKey: 'product_variant_id',
+// Product -> Cart Items
+db.Product.hasMany(db.CartItem, {
+    foreignKey: 'product_id',
     as: 'cartItems'
 });
 
-db.CartItem.belongsTo(db.ProductVariant, {
-    foreignKey: 'product_variant_id',
-    as: 'productVariant'
+db.CartItem.belongsTo(db.Product, {
+    foreignKey: 'product_id',
+    as: 'product'
 });
 
 // ========================================
@@ -156,15 +130,15 @@ db.OrderItem.belongsTo(db.Order, {
     as: 'order'
 });
 
-// Product Variant -> Order Items
-db.ProductVariant.hasMany(db.OrderItem, {
-    foreignKey: 'product_variant_id',
+// Product -> Order Items
+db.Product.hasMany(db.OrderItem, {
+    foreignKey: 'product_id',
     as: 'orderItems'
 });
 
-db.OrderItem.belongsTo(db.ProductVariant, {
-    foreignKey: 'product_variant_id',
-    as: 'productVariant'
+db.OrderItem.belongsTo(db.Product, {
+    foreignKey: 'product_id',
+    as: 'product'
 });
 
 // Order -> Payments
@@ -198,14 +172,14 @@ db.Transaction.belongsTo(db.User, {
     as: 'user'
 });
 
-db.ProductVariant.hasOne(db.Inventory, {
-    foreignKey: 'product_variant_id',
+db.Product.hasOne(db.Inventory, {
+    foreignKey: 'product_id',
     as: 'inventory'
 });
 
-db.Inventory.belongsTo(db.ProductVariant, {
-    foreignKey: 'product_variant_id',
-    as: 'productVariant'
+db.Inventory.belongsTo(db.Product, {
+    foreignKey: 'product_id',
+    as: 'product'
 });
 
 db.User.hasMany(db.ActivityLog, {

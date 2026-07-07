@@ -19,16 +19,7 @@ exports.listProducts = async (req, res, next) => {
             max_price = null
         } = req.query;
 
-        const result = await productService.searchProducts({
-            search,
-            category_id: category_id ? parseInt(category_id) : null,
-            sort,
-            order: order.toLowerCase() === 'desc' ? 'desc' : 'asc',
-            page: parseInt(page) || 1,
-            limit: Math.min(parseInt(limit) || 12, 50), // Max 50 per page
-            min_price: min_price ? parseFloat(min_price) : null,
-            max_price: max_price ? parseFloat(max_price) : null
-        });
+        const products = await productService.getAllProducts(req.query);
 
         return apiResponse.success(
             res,

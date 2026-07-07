@@ -41,11 +41,6 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false
             },
 
-            role_id: {
-                type: DataTypes.INTEGER,
-                allowNull: true
-            },
-
             status: {
                 type: DataTypes.ENUM('active', 'inactive'),
                 defaultValue: 'active',

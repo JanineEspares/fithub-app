@@ -1,4 +1,5 @@
-const db = require('../models');
+const cartService = require('../services/cartService');
+const apiResponse = require('../utils/apiResponse');
 
 const resolveCartVariant = async (productId, fallbackVariantId) => {
     if (fallbackVariantId) {
@@ -34,153 +35,106 @@ const resolveCartVariant = async (productId, fallbackVariantId) => {
 
 exports.getCart = async (req, res, next) => {
     try {
-        const cart = await db.Cart.findOne({
-            where: { user_id: req.user.id, status: 'active' },
-            include: [{
-                model: db.CartItem,
-                as: 'items',
-                include: [{
-                    model: db.ProductVariant,
-                    as: 'productVariant',
-                    include: [
-                        { model: db.Product, as: 'product' },
-                        { model: db.Inventory, as: 'inventory' }
-                    ]
-                }]
-            }]
-        });
 
-        res.status(200).json({
-            success: true,
-            message: 'Cart retrieved successfully.',
-            data: cart || { items: [] }
-        });
+        const cart = await cartService.getActiveCart(req.user.id);
+
+        return apiResponse.success(
+            res,
+            200,
+            'Cart retrieved successfully.',
+            cart
+        );
+
     } catch (error) {
         next(error);
     }
 };
 
 exports.addToCart = async (req, res, next) => {
-    try {
-        const quantity = Math.max(1, parseInt(req.body.quantity, 10) || 1);
 
-        let cart = await db.Cart.findOne({
-            where: { user_id: req.user.id, status: 'active' }
-        });
+    try {
+
+        let cart = await cartService.getActiveCart(req.user.id);
 
         if (!cart) {
-            cart = await db.Cart.create({
-                user_id: req.user.id,
-                status: 'active'
-            });
+            cart = await cartService.createCart(req.user.id);
         }
 
-        const variant = await resolveCartVariant(req.body.product_id, req.body.product_variant_id);
+        const item = await cartService.addItem(
+            cart.id,
+            req.body.product_id,
+            req.body.quantity || 1
+        );
 
-        if (!variant) {
-            return res.status(400).json({
-                success: false,
-                message: 'Unable to resolve a product variant for this item.'
-            });
-        }
+        return apiResponse.success(
+            res,
+            201,
+            'Item added to cart.',
+            item
+        );
 
-        let item = await db.CartItem.findOne({
-            where: {
-                cart_id: cart.id,
-                product_variant_id: variant.id
-            }
-        });
-
-        const existingQuantity = item ? Number(item.quantity) : 0;
-        const totalQuantity = existingQuantity + quantity;
-
-        if (variant.stock_quantity !== undefined && totalQuantity > variant.stock_quantity) {
-            return res.status(400).json({
-                success: false,
-                message: 'Requested quantity exceeds available stock.'
-            });
-        }
-
-        if (item) {
-            item = await item.update({
-                quantity: totalQuantity
-            });
-        } else {
-            item = await db.CartItem.create({
-                cart_id: cart.id,
-                product_variant_id: variant.id,
-                quantity
-            });
-        }
-
-        res.status(201).json({
-            success: true,
-            message: 'Item added to cart.',
-            data: item
-        });
     } catch (error) {
         next(error);
     }
+
 };
 
 exports.updateCartItem = async (req, res, next) => {
+
     try {
-        const quantity = Math.max(1, parseInt(req.body.quantity, 10) || 1);
 
-        const item = await db.CartItem.findByPk(req.params.id, {
-            include: [
-                { model: db.Cart, as: 'cart' },
-                { model: db.ProductVariant, as: 'productVariant' }
-            ]
-        });
+        const item = await cartService.findCartItem(req.params.id);
 
-        if (!item || !item.cart || item.cart.user_id !== req.user.id || item.cart.status !== 'active') {
-            return res.status(404).json({
-                success: false,
-                message: 'Cart item not found.'
-            });
+        if (!item) {
+            return apiResponse.error(
+                res,
+                404,
+                'Cart item not found.'
+            );
         }
 
-        const variant = item.productVariant;
-        if (variant && variant.stock_quantity !== undefined && quantity > variant.stock_quantity) {
-            return res.status(400).json({
-                success: false,
-                message: 'Requested quantity exceeds available stock.'
-            });
-        }
+        const updatedItem = await cartService.updateItem(
+            item,
+            req.body.quantity
+        );
 
-        await item.update({ quantity });
+        return apiResponse.success(
+            res,
+            200,
+            'Cart item updated.',
+            updatedItem
+        );
 
-        res.status(200).json({
-            success: true,
-            message: 'Cart item updated.',
-            data: item
-        });
     } catch (error) {
         next(error);
     }
+
 };
 
 exports.removeCartItem = async (req, res, next) => {
-    try {
-        const item = await db.CartItem.findByPk(req.params.id, {
-            include: [{ model: db.Cart, as: 'cart' }]
-        });
 
-        if (!item || !item.cart || item.cart.user_id !== req.user.id || item.cart.status !== 'active') {
-            return res.status(404).json({
-                success: false,
-                message: 'Cart item not found.'
-            });
+    try {
+
+        const item = await cartService.findCartItem(req.params.id);
+
+        if (!item) {
+            return apiResponse.error(
+                res,
+                404,
+                'Cart item not found.'
+            );
         }
 
-        await item.destroy();
+        await cartService.removeItem(item);
 
-        res.status(200).json({
-            success: true,
-            message: 'Cart item removed.'
-        });
+        return apiResponse.success(
+            res,
+            200,
+            'Cart item removed.'
+        );
+
     } catch (error) {
         next(error);
     }
+
 };

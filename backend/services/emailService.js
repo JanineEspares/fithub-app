@@ -7,13 +7,31 @@ const transporter = nodemailer.createTransport({
     secure: mailConfig.secure,
     auth: mailConfig.auth
 });
+ 
+transporter.verify(function (error, success) {
+    if (error) {
+        console.log(error);
+    } else {
+        console.log("Mail server is ready.");
+    }
+});
 
-exports.sendTransactionUpdate = async ({ to, subject, text, html, attachments = [] }) => {
+exports.sendTransactionUpdate = async ({
+    to,
+    subject,
+    text,
+    html,
+    attachments = []
+}) => {
+
     if (!to) {
+        console.log("No recipient email.");
         return;
     }
 
-    await transporter.sendMail({
+    console.log("Sending email to:", to);
+
+    const info = await transporter.sendMail({
         from: mailConfig.from,
         to,
         subject,
@@ -21,4 +39,7 @@ exports.sendTransactionUpdate = async ({ to, subject, text, html, attachments = 
         html,
         attachments
     });
+
+    console.log("Email sent successfully.");
+    console.log(info);
 };

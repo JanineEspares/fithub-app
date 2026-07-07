@@ -1,18 +1,36 @@
-const db = require('../models');
 const { Op } = require('sequelize');
+const db = require('../models');
 
-/**
- * Get all products with optional pagination
- * @deprecated Use searchProducts instead for better performance
- */
-exports.getAllProducts = async () => {
-    return await db.Product.findAll({
-        include: [
-            { model: db.ProductImage, as: 'images' },
-            { model: db.Inventory, as: 'inventory' },
-            { model: db.Review, as: 'reviews' }
-        ]
-    });
+const DEFAULT_PAGE_SIZE = 12;
+
+exports.getAllProducts = async (query = {}) => {
+    const where = {};
+
+    if (query.q) {
+        const keyword = `%${query.q.trim()}%`;
+
+        where[Op.or] = [
+            { name: { [Op.like]: keyword } },
+            { brand: { [Op.like]: keyword } },
+            { description: { [Op.like]: keyword } }
+        ];
+    }
+
+    const page = Number.parseInt(query.page, 10);
+    const limit = Number.parseInt(query.limit, 10) || DEFAULT_PAGE_SIZE;
+
+    const options = {
+        where,
+        order: [['id', 'DESC']]
+    };
+
+    if (Number.isInteger(page) && page > 0) {
+        options.limit = limit;
+        options.offset = (page - 1) * limit;
+    }
+
+    return await db.Product.findAll(options);
+
 };
 
 /**
