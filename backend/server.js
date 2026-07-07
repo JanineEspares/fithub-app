@@ -19,7 +19,6 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
-const orderRoutes = require('./routes/orderRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const adminOrderRoutes = require('./routes/adminOrderRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
