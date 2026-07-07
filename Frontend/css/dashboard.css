@@ -5,16 +5,17 @@
 }
 
 .metric-card {
-  border: 1px solid #dde5f4;
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: 14px;
-  background: #ffffff;
+  background: rgba(255,255,255,0.04);
   padding: 1rem;
-  box-shadow: 0 6px 20px rgba(19, 35, 68, 0.08);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+  color: var(--text);
 }
 
 .metric-label {
   font-size: 0.85rem;
-  color: #5d6b84;
+  color: var(--muted);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.6px;
@@ -33,10 +34,11 @@
 }
 
 .chart-card {
-  border: 1px solid #e1e8f7;
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: 14px;
-  background: #fff;
+  background: rgba(255,255,255,0.04);
   padding: 0.9rem;
+  color: var(--text);
 }
 
 @media (max-width: 991.98px) {

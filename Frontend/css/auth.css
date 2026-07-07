@@ -7,11 +7,20 @@ body[data-page='profile'] main {
 .auth-card {
   max-width: 520px;
   margin: 1rem auto;
-  border: 1px solid #e0e7f5;
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: 16px;
-  background: #fff;
-  box-shadow: 0 16px 42px rgba(20, 38, 72, 0.12);
+  background: rgba(255,255,255,0.03);
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.3);
   padding: 1.25rem;
+  color: var(--text);
+}
+
+.auth-card .form-label,
+.auth-card .auth-title,
+.auth-card .auth-helper,
+.auth-card small,
+.auth-card .form-text {
+  color: var(--text);
 }
 
 .auth-title {
@@ -20,12 +29,26 @@ body[data-page='profile'] main {
 }
 
 .auth-helper {
-  color: #5d6b84;
+  color: var(--muted);
   margin-bottom: 1rem;
 }
 
 .validation-error {
   font-size: 0.82rem;
-  color: #b42318;
+  color: #ff7a7a;
   margin-top: 0.35rem;
+}
+
+.auth-card .form-control,
+.auth-card .form-select,
+.auth-card textarea {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.12);
+  color: var(--text);
+}
+
+.auth-card .form-control:focus,
+.auth-card .form-select:focus,
+.auth-card textarea:focus {
+  background: rgba(255,255,255,0.06);
 }
