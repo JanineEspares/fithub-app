@@ -1,10 +1,37 @@
 const db = require('./models');
+const bcrypt = require('bcrypt');
 
 const seed = async () => {
   try {
+    // ============================================
+    // STEP 1: Create Default Admin Account
+    // ============================================
+    const adminExists = await db.User.findOne({
+      where: { email: 'admin@fithub.com' }
+    });
+
+    if (!adminExists) {
+      const hashedPassword = await bcrypt.hash('Admin@123', 10);
+      await db.User.create({
+        first_name: 'System',
+        last_name: 'Administrator',
+        email: 'admin@fithub.com',
+        password: hashedPassword,
+        role: 'admin',
+        status: 'active',
+        jwt_token: null
+      });
+      console.log('✅ Default admin account created (Email: admin@fithub.com | Password: Admin@123)');
+    } else {
+      console.log('✅ Admin account already exists.');
+    }
+
+    // ============================================
+    // STEP 2: Create Sample Products
+    // ============================================
     const count = await db.Product.count();
     if (count > 0) {
-      console.log('Products already seeded.');
+      console.log('✅ Products already seeded.');
       return;
     }
 
@@ -27,10 +54,29 @@ const seed = async () => {
       });
     }
 
-    console.log('Seed data created.');
+    console.log('✅ Seed data created successfully.');
   } catch (error) {
-    console.error(error);
+    console.error('❌ Seeding error:', error.message);
   }
 };
 
 module.exports = seed;
+
+/**
+ * SEEDER DOCUMENTATION
+ * ====================
+ * 
+ * This seeder automatically creates:
+ * 1. Default Admin Account (if not exists)
+ *    - Email: admin@fithub.com
+ *    - Password: Admin@123
+ *    - Role: admin
+ *    - Status: active
+ * 
+ * 2. Sample Products (if products table is empty)
+ *    - Supplements category
+ *    - 3 sample fitness products
+ * 
+ * Runs automatically on server startup (see server.js)
+ * Safe to run multiple times (idempotent checks)
+ */

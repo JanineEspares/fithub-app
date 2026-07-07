@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitHub Admin | Login</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- SweetAlert2 -->
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <style>
+    * {
+      font-family: 'Manrope', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+    }
+
+    .login-container {
+      max-width: 420px;
+      width: 100%;
+      padding: 20px;
+    }
+
+    .login-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      padding: 40px 30px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .admin-logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .admin-logo i {
+      font-size: 48px;
+      color: #667eea;
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    .admin-logo h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin: 0;
+      letter-spacing: -0.5px;
+    }
+
+    .admin-logo p {
+      font-size: 12px;
+      color: #999;
+      margin: 5px 0 0 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: #1a1a1a;
+      font-size: 14px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .form-control {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 12px 15px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      background-color: #f8f9ff;
+    }
+
+    .input-group {
+      position: relative;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #667eea;
+      font-size: 16px;
+      z-index: 10;
+      user-select: none;
+    }
+
+    .form-control-password {
+      padding-right: 40px;
+    }
+
+    .form-check {
+      margin-bottom: 15px;
+    }
+
+    .form-check-input {
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .form-check-input:checked {
+      background-color: #667eea;
+      border-color: #667eea;
+    }
+
+    .form-check-label {
+      color: #666;
+      font-size: 14px;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+
+    .forgot-password {
+      text-align: right;
+      margin-top: -5px;
+      margin-bottom: 20px;
+    }
+
+    .forgot-password a {
+      color: #667eea;
+      font-size: 12px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .forgot-password a:hover {
+      color: #764ba2;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-login:active {
+      transform: translateY(0);
+    }
+
+    .btn-login:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-login-loading {
+      position: relative;
+      color: transparent;
+    }
+
+    .btn-login-loading::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      top: 50%;
+      left: 50%;
+      margin-left: -8px;
+      margin-top: -8px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spinner 0.6s linear infinite;
+    }
+
+    @keyframes spinner {
+      to { transform: rotate(360deg); }
+    }
+
+    .login-footer {
+      margin-top: 25px;
+      text-align: center;
+      font-size: 12px;
+      color: #999;
+    }
+
+    .login-footer a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .login-footer a:hover {
+      text-decoration: underline;
+    }
+
+    .error-message {
+      color: #e74c3c;
+      font-size: 12px;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .form-control.is-invalid {
+      border-color: #e74c3c;
+    }
+
+    .form-control.is-invalid:focus {
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+
+    .demo-credentials {
+      background: #f8f9ff;
+      border-left: 3px solid #667eea;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      font-size: 12px;
+    }
+
+    .demo-credentials strong {
+      display: block;
+      color: #667eea;
+      margin-bottom: 5px;
+    }
+
+    .demo-credentials code {
+      display: block;
+      color: #1a1a1a;
+      margin: 2px 0;
+      font-family: 'Courier New', monospace;
+    }
+
+    /* Responsive */
+    @media (max-width: 576px) {
+      .login-container {
+        padding: 15px;
+      }
+
+      .login-card {
+        padding: 30px 20px;
+      }
+
+      .admin-logo h1 {
+        font-size: 24px;
+      }
+
+      .admin-logo i {
+        font-size: 40px;
+      }
+    }
+
+    /* Animation on page load */
+    .login-card {
+      animation: slideUp 0.5s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-card">
+      <!-- Logo & Title -->
+      <div class="admin-logo">
+        <i class="fas fa-lock-open"></i>
+        <h1>FitHub Admin</h1>
+        <p>Secure Access</p>
+      </div>
+
+      <!-- Demo Credentials Box -->
+      <div class="demo-credentials">
+        <strong>📝 Demo Credentials:</strong>
+        <code><strong>Email:</strong> admin@fithub.com</code>
+        <code><strong>Password:</strong> Admin@123</code>
+      </div>
+
+      <!-- Login Form -->
+      <form id="adminLoginForm">
+        <!-- Email Input -->
+        <div class="form-group">
+          <label for="adminEmail" class="form-label">Email Address</label>
+          <input 
+            type="email" 
+            id="adminEmail" 
+            name="email" 
+            class="form-control" 
+            placeholder="admin@fithub.com" 
+            required
+            autocomplete="email"
+          >
+          <div class="error-message" id="emailError"></div>
+        </div>
+
+        <!-- Password Input with Toggle -->
+        <div class="form-group">
+          <label for="adminPassword" class="form-label">Password</label>
+          <div class="input-group">
+            <input 
+              type="password" 
+              id="adminPassword" 
+              name="password" 
+              class="form-control form-control-password" 
+              placeholder="Enter your password" 
+              required
+              autocomplete="current-password"
+            >
+            <span class="password-toggle" id="passwordToggle">
+              <i class="fas fa-eye"></i>
+            </span>
+          </div>
+          <div class="error-message" id="passwordError"></div>
+        </div>
+
+        <!-- Remember Me Checkbox -->
+        <div class="form-check">
+          <input 
+            type="checkbox" 
+            id="rememberMe" 
+            name="rememberMe" 
+            class="form-check-input"
+          >
+          <label class="form-check-label" for="rememberMe">
+            Remember me for 7 days
+          </label>
+        </div>
+
+        <!-- Forgot Password Link -->
+        <div class="forgot-password">
+          <a href="#" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">Forgot Password?</a>
+        </div>
+
+        <!-- Login Button -->
+        <button type="submit" class="btn btn-login" id="loginBtn">
+          <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i>
+          Login to Dashboard
+        </button>
+      </form>
+
+      <!-- Footer -->
+      <div class="login-footer">
+        <p>🔒 Your connection is secure and encrypted</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Forgot Password Modal -->
+  <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title">Reset Password</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Enter your email address and we'll send you instructions to reset your password.</p>
+          <input type="email" id="forgotEmail" class="form-control" placeholder="Your email address">
+        </div>
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="resetPasswordBtn">Send Reset Link</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
+  <!-- Admin Login Script -->
+  <script src="js/admin-login.js"></script>
+</body>
+</html>

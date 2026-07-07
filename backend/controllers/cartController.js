@@ -41,7 +41,11 @@ exports.getCart = async (req, res, next) => {
                 as: 'items',
                 include: [{
                     model: db.ProductVariant,
-                    as: 'productVariant'
+                    as: 'productVariant',
+                    include: [
+                        { model: db.Product, as: 'product' },
+                        { model: db.Inventory, as: 'inventory' }
+                    ]
                 }]
             }]
         });
@@ -49,7 +53,7 @@ exports.getCart = async (req, res, next) => {
         res.status(200).json({
             success: true,
             message: 'Cart retrieved successfully.',
-            data: cart
+            data: cart || { items: [] }
         });
     } catch (error) {
         next(error);
@@ -58,6 +62,8 @@ exports.getCart = async (req, res, next) => {
 
 exports.addToCart = async (req, res, next) => {
     try {
+        const quantity = Math.max(1, parseInt(req.body.quantity, 10) || 1);
+
         let cart = await db.Cart.findOne({
             where: { user_id: req.user.id, status: 'active' }
         });
@@ -78,11 +84,34 @@ exports.addToCart = async (req, res, next) => {
             });
         }
 
-        const item = await db.CartItem.create({
-            cart_id: cart.id,
-            product_variant_id: variant.id,
-            quantity: req.body.quantity || 1
+        let item = await db.CartItem.findOne({
+            where: {
+                cart_id: cart.id,
+                product_variant_id: variant.id
+            }
         });
+
+        const existingQuantity = item ? Number(item.quantity) : 0;
+        const totalQuantity = existingQuantity + quantity;
+
+        if (variant.stock_quantity !== undefined && totalQuantity > variant.stock_quantity) {
+            return res.status(400).json({
+                success: false,
+                message: 'Requested quantity exceeds available stock.'
+            });
+        }
+
+        if (item) {
+            item = await item.update({
+                quantity: totalQuantity
+            });
+        } else {
+            item = await db.CartItem.create({
+                cart_id: cart.id,
+                product_variant_id: variant.id,
+                quantity
+            });
+        }
 
         res.status(201).json({
             success: true,
@@ -96,18 +125,31 @@ exports.addToCart = async (req, res, next) => {
 
 exports.updateCartItem = async (req, res, next) => {
     try {
-        const item = await db.CartItem.findByPk(req.params.id);
+        const quantity = Math.max(1, parseInt(req.body.quantity, 10) || 1);
 
-        if (!item) {
+        const item = await db.CartItem.findByPk(req.params.id, {
+            include: [
+                { model: db.Cart, as: 'cart' },
+                { model: db.ProductVariant, as: 'productVariant' }
+            ]
+        });
+
+        if (!item || !item.cart || item.cart.user_id !== req.user.id || item.cart.status !== 'active') {
             return res.status(404).json({
                 success: false,
                 message: 'Cart item not found.'
             });
         }
 
-        await item.update({
-            quantity: req.body.quantity
-        });
+        const variant = item.productVariant;
+        if (variant && variant.stock_quantity !== undefined && quantity > variant.stock_quantity) {
+            return res.status(400).json({
+                success: false,
+                message: 'Requested quantity exceeds available stock.'
+            });
+        }
+
+        await item.update({ quantity });
 
         res.status(200).json({
             success: true,
@@ -121,9 +163,11 @@ exports.updateCartItem = async (req, res, next) => {
 
 exports.removeCartItem = async (req, res, next) => {
     try {
-        const item = await db.CartItem.findByPk(req.params.id);
+        const item = await db.CartItem.findByPk(req.params.id, {
+            include: [{ model: db.Cart, as: 'cart' }]
+        });
 
-        if (!item) {
+        if (!item || !item.cart || item.cart.user_id !== req.user.id || item.cart.status !== 'active') {
             return res.status(404).json({
                 success: false,
                 message: 'Cart item not found.'

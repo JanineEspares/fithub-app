@@ -38,5 +38,16 @@
   <script src="js/config.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/auth.js"></script>
+  <script>
+    // Redirect already logged-in customers
+    $(function() {
+      const user = window.FitHubUtils.getUser();
+      if (user && user.role === 'customer') {
+        window.location.href = 'shop.html';
+      } else if (user && user.role === 'admin') {
+        window.location.href = 'admin-login.html';
+      }
+    });
+  </script>
 </body>
 </html>

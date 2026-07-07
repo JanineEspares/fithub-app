@@ -7,5 +7,6 @@ const router = express.Router();
 
 router.get('/sales', authMiddleware, roleMiddleware('admin'), reportController.salesSummary);
 router.get('/inventory', authMiddleware, roleMiddleware('admin'), reportController.inventorySummary);
+router.put('/inventory/:id', authMiddleware, roleMiddleware('admin'), reportController.updateInventory);
 
 module.exports = router;

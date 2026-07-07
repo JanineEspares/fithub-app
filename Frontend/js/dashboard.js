@@ -16,4 +16,25 @@ $(function () {
       <div class="metric-card"><div class="metric-label">Transactions</div><div class="metric-value">${data.transactions || 0}</div></div>
     `);
   });
+
+  window.FitHubUtils.apiRequest('/dashboard/charts').done((response) => {
+    const status = response.data?.transactionStatus || [];
+    const labels = status.map((item) => item.status);
+    const values = status.map((item) => item.count);
+
+    new Chart(document.getElementById('statusChart'), {
+      type: 'bar',
+      data: { labels, datasets: [{ label: 'Transactions', data: values, backgroundColor: '#ff6b2c' }] }
+    });
+
+    new Chart(document.getElementById('trendChart'), {
+      type: 'line',
+      data: { labels, datasets: [{ label: 'Trend', data: values, borderColor: '#1f8a70', tension: 0.35 }] }
+    });
+
+    new Chart(document.getElementById('mixChart'), {
+      type: 'pie',
+      data: { labels, datasets: [{ data: values, backgroundColor: ['#ff6b2c', '#1f8a70', '#264653', '#e9c46a'] }] }
+    });
+  });
 });

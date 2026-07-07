@@ -20,7 +20,17 @@ const registerValidator = [
 
     body('password')
         .isLength({ min: 8 })
-        .withMessage('Password must be at least 8 characters long.')
+        .withMessage('Password must be at least 8 characters long.'),
+
+    body('phone_number')
+        .optional()
+        .trim()
+        .matches(/^[0-9+\-\s()]*$/)
+        .withMessage('Phone number format is invalid.'),
+
+    body('address')
+        .optional()
+        .trim()
 
 ];
 

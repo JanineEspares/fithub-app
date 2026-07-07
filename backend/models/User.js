@@ -51,6 +51,16 @@ module.exports = (sequelize, DataTypes) => {
                 defaultValue: 'active',
                 allowNull: false
             },
+
+            phone_number: {
+                type: DataTypes.STRING(20),
+                allowNull: true
+            },
+
+            address: {
+                type: DataTypes.TEXT,
+                allowNull: true
+            },
         },
         {
             tableName: 'users',

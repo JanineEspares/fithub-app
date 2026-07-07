@@ -34,15 +34,24 @@
           <input id="register-email" name="email" type="email" class="form-control form-control-lg" required>
         </div>
         <div>
+          <label for="phone-number" class="form-label">Phone Number <span class="text-muted">(Optional)</span></label>
+          <input id="phone-number" name="phone_number" type="tel" class="form-control form-control-lg" placeholder="+1 (555) 123-4567">
+        </div>
+        <div>
+          <label for="address" class="form-label">Address <span class="text-muted">(Optional)</span></label>
+          <textarea id="address" name="address" class="form-control form-control-lg" rows="2" placeholder="123 Main St, City, State 12345"></textarea>
+        </div>
+        <div>
           <label for="register-password" class="form-label">Password</label>
           <input id="register-password" name="password" type="password" class="form-control form-control-lg" required>
+          <small class="text-muted">Minimum 8 characters</small>
         </div>
         <div>
           <label for="confirm-password" class="form-label">Confirm password</label>
           <input id="confirm-password" name="confirm_password" type="password" class="form-control form-control-lg" required>
           <div class="validation-error" data-password-match-error></div>
         </div>
-        <button class="btn btn-brand btn-lg" type="submit">Register</button>
+        <button class="btn btn-brand btn-lg" type="submit">Create Account</button>
         <p class="small text-center mb-0">Already have an account? <a href="login.html">Login here</a></p>
       </form>
     </section>
