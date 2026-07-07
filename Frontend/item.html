@@ -28,12 +28,12 @@
     </nav>
 
     <!-- Product Details Section -->
-    <div class="row g-4 mb-5">
+    <div class="row g-4 mb-5 product-info-grid">
       <!-- Product Images -->
       <div class="col-lg-5">
         <div class="card card-surface p-2">
           <!-- Main Image -->
-          <div class="ratio ratio-1x1 rounded-3 overflow-hidden bg-light mb-3">
+          <div class="ratio ratio-1x1 rounded-3 overflow-hidden product-image-shell mb-3">
             <img id="main-product-image" src="/assets/images/placeholder.png" alt="Product" 
                  class="w-100 h-100 object-fit-cover" onerror="this.src='/assets/images/placeholder.png'">
           </div>
@@ -51,7 +51,7 @@
         <div class="mb-3">
           <small class="text-muted">Product ID: <span id="item-id">-</span></small>
           <div class="d-flex gap-2 mt-2">
-            <span id="item-category" class="badge bg-light text-dark">Category</span>
+            <span id="item-category" class="badge badge-category">Category</span>
             <span id="item-status-badge" class="badge bg-success">In Stock</span>
           </div>
         </div>
@@ -218,7 +218,7 @@
     <!-- Related Products Section -->
     <div class="mb-5">
       <h3 class="section-title mb-4">Related Products</h3>
-      <div id="related-products" class="row g-3">
+      <div id="related-products" class="related-products row g-3">
         <!-- Related products will be inserted here -->
       </div>
     </div>
