@@ -312,6 +312,257 @@ CREATE UNIQUE INDEX `uq_reviews_user_product` ON `fithub_app`.`reviews` (`user_i
 
 CREATE INDEX `fk_reviews_products1_idx` ON `fithub_app`.`reviews` (`product_id` ASC) ;
 
+-- -----------------------------------------------------
+-- Seed data for FitHub (users, categories, products, variants, images, carts, orders, payments, reviews, coupons, inventory)
+-- -----------------------------------------------------
+
+-- USERS (3) - passwords hashed with bcrypt
+INSERT INTO `fithub_app`.`users` (`id`,`first_name`,`last_name`,`email`,`password`,`role`,`status`,`created_at`,`updated_at`) VALUES
+(1,'System','Administrator','admin@fithub.com','$2b$10$w4Wz0hA9qvG6Zp1rXbY0NeFq3t8sC1uPzQ9vLx6mY2aB7cD8EfGhK','admin','active','2026-06-01 09:00:00','2026-06-01 09:00:00'),
+(2,'Janine','Espares','Janine@gmail.com','$2b$10$u8Hc7VxL4mN2pQq9ZtY6Rb1sF3gK5wA0dL2eFvG7hJ9kPq3RsTuVw','customer','active','2026-06-05 11:12:00','2026-06-05 11:12:00'),
+(3,'Stefanie','Espinar','Stefanie@gmail.com','$2b$10$z9Kf6TgM3bV5nQw1HsLp8Ry2cDeF4uA0mGhJ7sV2qX1pLk6MnNoPq','customer','active','2026-06-07 14:30:00','2026-06-07 14:30:00');
+
+-- CATEGORIES (8)
+INSERT INTO `fithub_app`.`categories` (`id`,`name`,`status`,`created_at`,`updated_at`) VALUES
+(1,'Protein Supplements','active','2026-05-10 08:00:00','2026-05-10 08:00:00'),
+(2,'Pre-Workout','active','2026-05-10 08:01:00','2026-05-10 08:01:00'),
+(3,'Post-Workout Recovery','active','2026-05-10 08:02:00','2026-05-10 08:02:00'),
+(4,'Vitamins & Nutrition','active','2026-05-10 08:03:00','2026-05-10 08:03:00'),
+(5,'Gym Equipment','active','2026-05-10 08:04:00','2026-05-10 08:04:00'),
+(6,'Home Workout Equipment','active','2026-05-10 08:05:00','2026-05-10 08:05:00'),
+(7,'Activewear','active','2026-05-10 08:06:00','2026-05-10 08:06:00'),
+(8,'Fitness Accessories','active','2026-05-10 08:07:00','2026-05-10 08:07:00');
+
+-- PRODUCTS (50) - minimal fields (assumes full product list exists in schema for testing)
+-- For brevity products/variants/images are added to align with frontend test data
+INSERT INTO `fithub_app`.`products` (`id`,`category_id`,`name`,`description`,`brand`,`status`,`created_at`,`updated_at`) VALUES
+(1,1,'Gold Standard Whey','Trusted whey protein for muscle recovery and performance.','Optimum Nutrition','active','2026-05-11 09:00:00','2026-05-11 09:00:00'),
+(2,1,'ISO100 Whey Protein','Fast-digesting isolate for lean recovery.','Dymatize','active','2026-05-11 09:05:00','2026-05-11 09:05:00'),
+(3,1,'NitroTech Whey','Advanced whey blend with creatine.','Muscletech','active','2026-05-11 09:10:00','2026-05-11 09:10:00'),
+(4,1,'Rule 1 Whey Blend','Premium whey blend with great taste.','Rule One','active','2026-05-11 09:15:00','2026-05-11 09:15:00'),
+(5,2,'N.O.-XPLODE Pre-Workout','High-energy pre-workout to increase focus and pumps.','Muscletech','active','2026-05-12 10:00:00','2026-05-12 10:00:00'),
+(6,2,'C4 Original Pre-Workout','Popular pre-workout for energy and endurance.','Cellucor','active','2026-05-12 10:05:00','2026-05-12 10:05:00'),
+(7,3,'BCAA Recovery Formula','Supports muscle recovery with BCAAs.','MyProtein','active','2026-05-12 10:10:00','2026-05-12 10:10:00'),
+(8,3,'Glutamine Powder','Aids muscle repair and recovery.','Optimum Nutrition','active','2026-05-12 10:15:00','2026-05-12 10:15:00'),
+(9,4,'Multivitamin Daily','Complete multivitamin for active lifestyles.','Nature Made','active','2026-05-13 11:00:00','2026-05-13 11:00:00'),
+(10,8,'Resistance Bands','Set of resistance bands for all levels.','FitLife','active','2026-05-14 12:05:00','2026-05-14 12:05:00'),
+(11,5,'Adjustable Dumbbell Set','Space-saving adjustable dumbbells.','Bowflex','active','2026-05-14 12:00:00','2026-05-14 12:00:00'),
+(12,5,'Adjustable Bench','Incline/flat adjustable bench.','Life Fitness','active','2026-05-14 12:20:00','2026-05-14 12:20:00'),
+(13,6,'Kettlebell 10kg','Cast-iron kettlebell for swings and core work.','Puma','active','2026-05-14 12:10:00','2026-05-14 12:10:00'),
+(14,5,'Olympic Barbell','20kg Olympic barbell.','Rogue','active','2026-05-14 12:15:00','2026-05-14 12:15:00'),
+(15,5,'Squat Rack','Heavy-duty squat rack for powerlifting.','Rogue','active','2026-05-14 12:25:00','2026-05-14 12:25:00'),
+(16,8,'Yoga Mat','Non-slip high-density yoga mat.','Manduka','active','2026-05-15 13:05:00','2026-05-15 13:05:00'),
+(17,8,'Foam Roller','For myofascial release and recovery.','TriggerPoint','active','2026-05-15 13:10:00','2026-05-15 13:10:00'),
+(18,8,'Shaker Bottle','Leak-proof 700ml shaker bottle.','Nike','active','2026-05-15 13:15:00','2026-05-15 13:15:00'),
+(19,8,'Jump Rope','Adjustable speed jump rope.','Everlast','active','2026-05-18 16:10:00','2026-05-18 16:10:00'),
+(20,7,'Mens Compression Shirt','Compression tee for performance.','Under Armour','active','2026-05-16 14:00:00','2026-05-16 14:00:00'),
+(21,7,'Womens High-Waist Leggings','Comfortable high-rise leggings.','Adidas','active','2026-05-16 14:05:00','2026-05-16 14:05:00'),
+(22,7,'Running Shorts','Lightweight running shorts.','Nike','active','2026-05-16 14:10:00','2026-05-16 14:10:00'),
+(23,7,'Training Hoodie','Warm hoodie with moisture-wicking fabric.','Puma','active','2026-05-16 14:15:00','2026-05-16 14:15:00'),
+(24,1,'Mass Gainer Blend','High-calorie mass gainer for hardgainers.','Optimum Nutrition','active','2026-05-17 15:00:00','2026-05-17 15:00:00'),
+(25,1,'Vegan Protein Powder','Plant-based protein for sensitive stomachs.','MyProtein','active','2026-05-17 15:05:00','2026-05-17 15:05:00'),
+(26,2,'Pre-Workout Stimulant-Free','Non-stimulant preworkout for late workouts.','Rule One','active','2026-05-17 15:10:00','2026-05-17 15:10:00'),
+(27,3,'Post-Workout Protein Bar','On-the-go recovery protein bar.','Dymatize','active','2026-05-18 16:00:00','2026-05-18 16:00:00'),
+(28,4,'Omega-3 Fish Oil','Supports heart and joint health.','Nordic Naturals','active','2026-05-18 16:05:00','2026-05-18 16:05:00'),
+(29,6,'Adjustable Ankle Weights','Adds resistance for walks and sprints.','Puma','active','2026-05-19 17:00:00','2026-05-19 17:00:00'),
+(30,6,'Pull-Up Bar','Doorway pull-up bar for home workouts.','Puma','active','2026-05-19 17:05:00','2026-05-19 17:05:00'),
+(31,5,'Compact Treadmill','Folding treadmill for small spaces.','Life Fitness','active','2026-05-19 17:00:00','2026-05-19 17:00:00'),
+(32,5,'Elliptical Trainer','Low-impact elliptical for home use.','Bowflex','active','2026-05-19 17:05:00','2026-05-19 17:05:00'),
+(33,8,'Wrist Wraps','Support for wrists during heavy lifts.','Rogue','active','2026-05-19 17:10:00','2026-05-19 17:10:00'),
+(34,8,'Weight Lifting Gloves','Protects hands and improves grip.','Everlast','active','2026-05-20 18:00:00','2026-05-20 18:00:00'),
+(35,1,'Hydrolyzed Collagen Protein','Supports joints and recovery.','MyProtein','active','2026-05-20 18:05:00','2026-05-20 18:05:00'),
+(36,4,'Electrolyte Drink Mix','Replenishes electrolytes during workouts.','Nuun','active','2026-05-20 18:10:00','2026-05-20 18:10:00'),
+(37,1,'Gold Standard Whey (Chocolate)','Classic chocolate flavor tub of Gold Standard.','Optimum Nutrition','active','2026-05-22 20:05:00','2026-05-22 20:05:00'),
+(38,8,'Protein Shaker Pro XL','Large shaker with built-in mixer ball.','Nike','active','2026-05-21 19:00:00','2026-05-21 19:00:00'),
+(39,6,'Resistance Trainer Home Gym','All-in-one home resistance trainer.','Bowflex','active','2026-05-21 19:05:00','2026-05-21 19:05:00'),
+(40,8,'Gym Towel Microfiber','Quick-dry microfiber gym towel.','Nike','active','2026-05-22 20:00:00','2026-05-22 20:00:00'),
+(41,1,'Casein Night Protein','Slow-digesting casein for overnight recovery.','Optimum Nutrition','active','2026-05-22 20:05:00','2026-05-22 20:05:00'),
+(42,1,'Whey Isolate Natural','Unflavored whey isolate concentrate.','Dymatize','active','2026-05-22 20:10:00','2026-05-22 20:10:00'),
+(43,2,'Nitric Oxide Booster','Supports pumps and blood flow.','Muscletech','active','2026-05-23 21:00:00','2026-05-23 21:00:00'),
+(44,8,'Jump Rope Speed','Adjustable speed rope for cardio.','Everlast','active','2026-05-18 16:10:00','2026-05-18 16:10:00'),
+(45,5,'Adjustable Dumbbells Set','Adjustable dumbbells for compact gyms.','Bowflex','active','2026-05-14 12:00:00','2026-05-14 12:00:00'),
+(46,7,'Training Socks 3-Pack','Cushioned athletic socks.','Puma','active','2026-05-24 22:00:00','2026-05-24 22:00:00'),
+(47,4,'Probiotic Daily','Supports gut health for active digestion.','NOW Foods','active','2026-05-24 22:05:00','2026-05-24 22:05:00'),
+(48,8,'Phone Armband','Adjustable armband for phone during runs.','Nike','active','2026-05-24 22:10:00','2026-05-24 22:10:00'),
+(49,6,'Stability Ball 65cm','Anti-burst stability ball for core and balance.','Puma','active','2026-05-25 23:00:00','2026-05-25 23:00:00'),
+(50,50,'Leg Press Attachment','Plate-loaded leg press attachment.','Life Fitness','active','2026-05-25 23:05:00','2026-05-25 23:05:00');
+
+-- PRODUCT VARIANTS (one primary variant per product)
+INSERT INTO `fithub_app`.`product_variants` (`id`,`product_id`,`variant_name`,`sku`,`price`,`stock_quantity`,`status`,`created_at`,`updated_at`) VALUES
+(1,1,'2lb / Chocolate','ON-GSW-001',1299.00,50,'active','2026-05-11 09:00:00','2026-05-11 09:00:00'),
+(2,2,'2lb / Vanilla','DY-ISO-002',1599.00,30,'active','2026-05-11 09:05:00','2026-05-11 09:05:00'),
+(3,3,'2lb / Strawberry','MT-NITRO-003',1499.00,25,'active','2026-05-11 09:10:00','2026-05-11 09:10:00'),
+(4,4,'2lb / Cookies & Cream','R1-WHEY-004',1399.00,40,'active','2026-05-11 09:15:00','2026-05-11 09:15:00'),
+(5,5,'30 Servings','MT-NOX-005',999.00,60,'active','2026-05-12 10:00:00','2026-05-12 10:00:00'),
+(6,6,'30 Servings','C4-30-006',899.00,45,'active','2026-05-12 10:05:00','2026-05-12 10:05:00'),
+(7,7,'300g','MP-BCAA-007',699.00,70,'active','2026-05-12 10:10:00','2026-05-12 10:10:00'),
+(8,8,'300g','ON-GLUT-008',599.00,80,'active','2026-05-12 10:15:00','2026-05-12 10:15:00'),
+(9,9,'120 Tablets','NM-MULTI-009',499.00,150,'active','2026-05-13 11:00:00','2026-05-13 11:00:00'),
+(10,10,'Set of 3','FL-RB-012',350.00,120,'active','2026-05-14 12:05:00','2026-05-14 12:05:00'),
+(11,11,'Pair','BF-ADB-011',12500.00,10,'active','2026-05-14 12:00:00','2026-05-14 12:00:00'),
+(12,12,'Incline/Flat','LF-AB-015',7999.00,7,'active','2026-05-14 12:20:00','2026-05-14 12:20:00'),
+(13,13,'12kg','PU-ADKB-013',3499.00,15,'active','2026-05-14 12:10:00','2026-05-14 12:10:00'),
+(14,14,'20kg Bar','RG-OB-014',4999.00,8,'active','2026-05-14 12:15:00','2026-05-14 12:15:00'),
+(15,15,'Standard Rack','RG-SR-016',11999.00,5,'active','2026-05-14 12:25:00','2026-05-14 12:25:00'),
+(16,16,'Standard Mat / Purple','MD-YM-018',899.00,90,'active','2026-05-15 13:05:00','2026-05-15 13:05:00'),
+(17,17,'45cm / Black','TP-FR-019',750.00,100,'active','2026-05-15 13:10:00','2026-05-15 13:10:00'),
+(18,18,'700ml / Clear','NK-SHK-020',249.00,200,'active','2026-05-15 13:15:00','2026-05-15 13:15:00'),
+(19,19,'Standard Rope','EV-JR-030',399.00,150,'active','2026-05-18 16:10:00','2026-05-18 16:10:00'),
+(20,20,'S-XL','UA-CS-021',899.00,80,'active','2026-05-16 14:00:00','2026-05-16 14:00:00'),
+(21,21,'S-XL','AD-LG-022',1299.00,70,'active','2026-05-16 14:05:00','2026-05-16 14:05:00'),
+(22,22,'M-XL','NK-RS-023',699.00,120,'active','2026-05-16 14:10:00','2026-05-16 14:10:00'),
+(23,23,'Unisex','PU-TR-024',1999.00,60,'active','2026-05-16 14:15:00','2026-05-16 14:15:00'),
+(24,24,'6lb','ON-MASS-025',1999.00,22,'active','2026-05-17 15:00:00','2026-05-17 15:00:00'),
+(25,25,'2lb','MP-VGN-026',1399.00,40,'active','2026-05-17 15:05:00','2026-05-17 15:05:00'),
+(26,26,'30 Servings','R1-NSF-027',899.00,50,'active','2026-05-17 15:10:00','2026-05-17 15:10:00'),
+(27,27,'Box of 12','DY-BAR-028',299.00,140,'active','2026-05-18 16:00:00','2026-05-18 16:00:00'),
+(28,28,'60 Softgels','NN-OMEGA-029',799.00,110,'active','2026-05-18 16:05:00','2026-05-18 16:05:00'),
+(29,29,'Pair','EV-JR-030',399.00,150,'active','2026-05-18 16:10:00','2026-05-18 16:10:00'),
+(30,30,'Door','EV-PU-DOOR',799.00,90,'active','2026-05-18 16:11:00','2026-05-18 16:11:00'),
+(31,31,'Foldable','LF-TM-2.5HP',29999.00,4,'active','2026-05-19 17:00:00','2026-05-19 17:00:00'),
+(32,32,'Compact','BF-EL-032',45999.00,3,'active','2026-05-19 17:05:00','2026-05-19 17:05:00'),
+(33,33,'Pro','MT-MG-PRO',6999.00,40,'active','2026-05-19 17:10:00','2026-05-19 17:10:00'),
+(34,34,'Pair','EV-GL-034',399.00,140,'active','2026-05-20 18:00:00','2026-05-20 18:00:00'),
+(35,35,'Pair','UA-WG-035',699.00,180,'active','2026-05-20 18:05:00','2026-05-20 18:05:00'),
+(36,36,'1kg','DY-ISO-1KG',2799.00,22,'active','2026-04-01 09:00:00','2026-04-01 09:00:00'),
+(37,37,'2lb Chocolate','ON-GS-CH-037',1299.00,60,'active','2026-04-02 09:00:00','2026-04-02 09:00:00'),
+(38,38,'XL','AD-SHK-038',349.00,180,'active','2026-05-21 19:00:00','2026-05-21 19:00:00'),
+(39,39,'Complete System','BF-RHT-038',21999.00,6,'active','2026-05-21 19:05:00','2026-05-21 19:05:00'),
+(40,40,'Medium','NK-TWL-040',249.00,200,'active','2026-05-22 20:00:00','2026-05-22 20:00:00'),
+(41,41,'2lb','ON-CASEIN-041',1299.00,35,'active','2026-05-22 20:05:00','2026-05-22 20:05:00'),
+(42,42,'2lb','DY-WI-042',1399.00,45,'active','2026-05-22 20:10:00','2026-05-22 20:10:00'),
+(43,43,'60 Capsules','MT-NOB-043',699.00,90,'active','2026-05-23 21:00:00','2026-05-23 21:00:00'),
+(44,44,'20 Tabs','NU-RET-044',299.00,150,'active','2026-05-23 21:05:00','2026-05-23 21:05:00'),
+(45,45,'Large','UA-GB-045',2499.00,40,'active','2026-05-23 21:10:00','2026-05-23 21:10:00'),
+(46,46,'Pack of 3','PU-TS-046',399.00,200,'active','2026-05-24 22:00:00','2026-05-24 22:00:00'),
+(47,47,'30 Capsules','NOW-PRO-047',599.00,120,'active','2026-05-24 22:05:00','2026-05-24 22:05:00'),
+(48,48,'Universal','NK-ARM-048',499.00,180,'active','2026-05-24 22:10:00','2026-05-24 22:10:00'),
+(49,49,'65cm','PU-SB-049',1999.00,25,'active','2026-05-25 23:00:00','2026-05-25 23:00:00'),
+(50,50,'Plate-Loaded','LF-LP-050',25999.00,2,'active','2026-05-25 23:05:00','2026-05-25 23:05:00');
+
+-- PRODUCT IMAGES (3 each for first 25 products; continue as needed)
+INSERT INTO `fithub_app`.`product_images` (`product_id`,`image_path`,`is_primary`,`created_at`) VALUES
+(1,'uploads/products/gold-standard-1.jpg',1,'2026-05-11 09:01:00'),
+(1,'uploads/products/gold-standard-2.jpg',0,'2026-05-11 09:01:30'),
+(1,'uploads/products/gold-standard-3.jpg',0,'2026-05-11 09:02:00'),
+(2,'uploads/products/iso100-1.jpg',1,'2026-05-11 09:06:00'),
+(2,'uploads/products/iso100-2.jpg',0,'2026-05-11 09:06:30'),
+(2,'uploads/products/iso100-3.jpg',0,'2026-05-11 09:07:00'),
+(3,'uploads/products/nitrotech-1.jpg',1,'2026-05-11 09:11:00'),
+(3,'uploads/products/nitrotech-2.jpg',0,'2026-05-11 09:11:30'),
+(3,'uploads/products/nitrotech-3.jpg',0,'2026-05-11 09:12:00'),
+(10,'uploads/products/resistance-bands-1.jpg',1,'2026-05-14 12:06:00'),
+(10,'uploads/products/resistance-bands-2.jpg',0,'2026-05-14 12:06:30'),
+(10,'uploads/products/resistance-bands-3.jpg',0,'2026-05-14 12:07:00'),
+(11,'uploads/products/adjustable-dumbbell-1.jpg',1,'2026-05-14 12:01:00'),
+(11,'uploads/products/adjustable-dumbbell-2.jpg',0,'2026-05-14 12:01:30'),
+(11,'uploads/products/adjustable-dumbbell-3.jpg',0,'2026-05-14 12:02:00'),
+(16,'uploads/products/yoga-mat-1.jpg',1,'2026-05-15 13:06:00'),
+(16,'uploads/products/yoga-mat-2.jpg',0,'2026-05-15 13:06:30'),
+(16,'uploads/products/yoga-mat-3.jpg',0,'2026-05-15 13:07:00'),
+(18,'uploads/products/shaker-bottle-1.jpg',1,'2026-05-15 13:16:00'),
+(18,'uploads/products/shaker-bottle-2.jpg',0,'2026-05-15 13:16:30'),
+(18,'uploads/products/shaker-bottle-3.jpg',0,'2026-05-15 13:17:00');
+
+-- SHIPPING ADDRESSES
+INSERT INTO `fithub_app`.`shipping_addresses` (`id`,`user_id`,`recipient_name`,`contact_number`,`address_line`,`city`,`province`,`postal_code`,`is_default`,`created_at`,`address_line_2`) VALUES
+(1,2,'Janine Espares','09171234567','123 Rizal St., Brgy. Malinis','Makati','Metro Manila','1200',1,'2026-06-05 11:20:00',NULL),
+(2,3,'Stefanie Espinar','09179876543','45 Bonifacio Ave., Brgy. Luntian','Quezon City','Metro Manila','1100',1,'2026-06-07 14:35:00','Apt 5B');
+
+-- CARTS
+INSERT INTO `fithub_app`.`carts` (`id`,`user_id`,`status`,`created_at`) VALUES
+(1,2,'active','2026-06-10 10:00:00'),
+(2,3,'active','2026-06-11 11:00:00');
+
+-- CART ITEMS (Janine: Gold Standard Whey ×2, Resistance Bands ×1)
+INSERT INTO `fithub_app`.`cart_items` (`cart_id`,`product_variant_id`,`quantity`,`created_at`) VALUES
+(1,1,2,'2026-06-10 10:05:00'),
+(1,10,1,'2026-06-10 10:06:00');
+
+-- CART ITEMS (Stefanie: Yoga Mat ×1, Shaker Bottle ×2, Adjustable Dumbbells ×1)
+INSERT INTO `fithub_app`.`cart_items` (`cart_id`,`product_variant_id`,`quantity`,`created_at`) VALUES
+(2,16,1,'2026-06-11 11:05:00'),
+(2,18,2,'2026-06-11 11:06:00'),
+(2,11,1,'2026-06-11 11:07:00');
+
+-- ORDERS
+INSERT INTO `fithub_app`.`orders` (`id`,`user_id`,`order_number`,`recipient_name`,`contact_number`,`address_line`,`city`,`province`,`postal_code`,`total_amount`,`status`,`created_at`) VALUES
+(1,2,'100001','Janine Espares','09171234567','123 Rizal St., Brgy. Malinis','Makati','Metro Manila','1200',1649.00,'completed','2026-06-12 09:00:00'),
+(2,3,'100002','Stefanie Espinar','09179876543','45 Bonifacio Ave., Brgy. Luntian','Quezon City','Metro Manila','1100',14297.00,'pending','2026-06-13 15:30:00');
+
+-- ORDER ITEMS
+INSERT INTO `fithub_app`.`order_items` (`order_id`,`product_variant_id`,`quantity`,`unit_price`,`subtotal`,`created_at`) VALUES
+(1,1,1,1299.00,1299.00,'2026-06-12 09:01:00'),
+(1,10,1,350.00,350.00,'2026-06-12 09:02:00'),
+(2,16,1,899.00,899.00,'2026-06-13 15:31:00'),
+(2,11,1,12500.00,12500.00,'2026-06-13 15:32:00'),
+(2,18,2,249.00,498.00,'2026-06-13 15:33:00');
+
+-- PAYMENTS
+INSERT INTO `fithub_app`.`payments` (`id`,`order_id`,`amount`,`payment_method`,`payment_status`,`reference_number`,`paid_at`,`created_at`) VALUES
+(1,1,1649.00,'gcash','paid','GCASH-REF-100001','2026-06-12 09:10:00','2026-06-12 09:10:00'),
+(2,2,14297.00,'cash_on_delivery','pending',NULL,NULL,'2026-06-13 15:40:00');
+
+-- REVIEWS
+INSERT INTO `fithub_app`.`reviews` (`user_id`,`product_id`,`rating`,`comment`,`created_at`) VALUES
+(2,1,5,'Excellent whey — great taste and mixes well.','2026-06-20 10:00:00'),
+(2,10,4,'Resistance bands are durable and versatile for home workouts.','2026-06-20 10:05:00'),
+(3,16,5,'Yoga mat is comfy and non-slip for my daily practice.','2026-06-21 12:00:00'),
+(3,11,4,'Adjustable dumbbells are solid and saved space in my apartment.','2026-06-21 12:10:00');
+
+-- COUPONS
+CREATE TABLE IF NOT EXISTS `fithub_app`.`coupons` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `code` VARCHAR(50) NOT NULL,
+  `type` ENUM('percent','fixed') NOT NULL,
+  `value` DECIMAL(10,2) NOT NULL,
+  `status` ENUM('active','inactive') NOT NULL DEFAULT 'active',
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB;
+
+INSERT INTO `fithub_app`.`coupons` (`id`,`code`,`type`,`value`,`status`,`created_at`) VALUES
+(1,'FIT10','percent',10.00,'active','2026-05-01 08:00:00'),
+(2,'WELCOME100','fixed',100.00,'active','2026-05-01 08:05:00'),
+(3,'SUMMER15','percent',15.00,'active','2026-05-01 08:10:00');
+
+-- INVENTORY
+CREATE TABLE IF NOT EXISTS `fithub_app`.`inventory` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `product_variant_id` INT NOT NULL,
+  `current_stock` INT NOT NULL DEFAULT 0,
+  `reserved_stock` INT NOT NULL DEFAULT 0,
+  `sold_quantity` INT NOT NULL DEFAULT 0,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_inventory_product_variants1`
+    FOREIGN KEY (`product_variant_id`)
+    REFERENCES `fithub_app`.`product_variants` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+) ENGINE = InnoDB;
+
+INSERT INTO `fithub_app`.`inventory` (`product_variant_id`,`current_stock`,`reserved_stock`,`sold_quantity`,`updated_at`) VALUES
+(1,50,3,12,'2026-06-30 08:00:00'),
+(10,120,4,18,'2026-06-30 08:00:00'),
+(11,10,1,3,'2026-06-30 08:00:00'),
+(16,90,2,12,'2026-06-30 08:00:00'),
+(18,200,10,25,'2026-06-30 08:00:00');
+
+-- Additional sample orders for dashboard metrics
+INSERT INTO `fithub_app`.`orders` (`id`,`user_id`,`order_number`,`recipient_name`,`contact_number`,`address_line`,`city`,`province`,`postal_code`,`total_amount`,`status`,`created_at`) VALUES
+(3,2,'100003','Janine Espares','09171234567','123 Rizal St., Brgy. Malinis','Makati','Metro Manila','1200',1599.00,'completed','2026-06-02 09:00:00'),
+(4,3,'100004','Stefanie Espinar','09179876543','45 Bonifacio Ave., Brgy. Luntian','Quezon City','Metro Manila','1100',899.00,'completed','2026-06-04 10:30:00');
+
+INSERT INTO `fithub_app`.`order_items` (`order_id`,`product_variant_id`,`quantity`,`unit_price`,`subtotal`,`created_at`) VALUES
+(3,2,1,1599.00,1599.00,'2026-06-02 09:01:00'),
+(4,6,1,899.00,899.00,'2026-06-04 10:31:00');
+
+INSERT INTO `fithub_app`.`payments` (`id`,`order_id`,`amount`,`payment_method`,`payment_status`,`reference_number`,`paid_at`,`created_at`) VALUES
+(3,3,1599.00,'gcash','paid','GCASH-REF-100003','2026-06-02 09:20:00','2026-06-02 09:20:00'),
+(4,4,899.00,'bank_transfer','paid','BANK-REF-100004','2026-06-04 10:40:00','2026-06-04 10:40:00');
+
+-- End seed block
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
