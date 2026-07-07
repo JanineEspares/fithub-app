@@ -385,7 +385,7 @@ INSERT INTO `fithub_app`.`products` (`id`,`category_id`,`name`,`description`,`br
 (47,4,'Probiotic Daily','Supports gut health for active digestion.','NOW Foods','active','2026-05-24 22:05:00','2026-05-24 22:05:00'),
 (48,8,'Phone Armband','Adjustable armband for phone during runs.','Nike','active','2026-05-24 22:10:00','2026-05-24 22:10:00'),
 (49,6,'Stability Ball 65cm','Anti-burst stability ball for core and balance.','Puma','active','2026-05-25 23:00:00','2026-05-25 23:00:00'),
-(50,50,'Leg Press Attachment','Plate-loaded leg press attachment.','Life Fitness','active','2026-05-25 23:05:00','2026-05-25 23:05:00');
+(50,5,'Leg Press Attachment','Plate-loaded leg press attachment.','Life Fitness','active','2026-05-25 23:05:00','2026-05-25 23:05:00');
 
 -- PRODUCT IMAGES (2 each for products 1-50)
 INSERT INTO `fithub_app`.`product_images` (`product_id`,`image_path`,`is_primary`,`created_at`) VALUES
