@@ -387,128 +387,113 @@ INSERT INTO `fithub_app`.`products` (`id`,`category_id`,`name`,`description`,`br
 (49,6,'Stability Ball 65cm','Anti-burst stability ball for core and balance.','Puma','active','2026-05-25 23:00:00','2026-05-25 23:00:00'),
 (50,50,'Leg Press Attachment','Plate-loaded leg press attachment.','Life Fitness','active','2026-05-25 23:05:00','2026-05-25 23:05:00');
 
--- PRODUCT VARIANTS (one primary variant per product)
-INSERT INTO `fithub_app`.`product_variants` (`id`,`product_id`,`variant_name`,`sku`,`price`,`stock_quantity`,`status`,`created_at`,`updated_at`) VALUES
-(1,1,'2lb / Chocolate','ON-GSW-001',1299.00,50,'active','2026-05-11 09:00:00','2026-05-11 09:00:00'),
-(2,2,'2lb / Vanilla','DY-ISO-002',1599.00,30,'active','2026-05-11 09:05:00','2026-05-11 09:05:00'),
-(3,3,'2lb / Strawberry','MT-NITRO-003',1499.00,25,'active','2026-05-11 09:10:00','2026-05-11 09:10:00'),
-(4,4,'2lb / Cookies & Cream','R1-WHEY-004',1399.00,40,'active','2026-05-11 09:15:00','2026-05-11 09:15:00'),
-(5,5,'30 Servings','MT-NOX-005',999.00,60,'active','2026-05-12 10:00:00','2026-05-12 10:00:00'),
-(6,6,'30 Servings','C4-30-006',899.00,45,'active','2026-05-12 10:05:00','2026-05-12 10:05:00'),
-(7,7,'300g','MP-BCAA-007',699.00,70,'active','2026-05-12 10:10:00','2026-05-12 10:10:00'),
-(8,8,'300g','ON-GLUT-008',599.00,80,'active','2026-05-12 10:15:00','2026-05-12 10:15:00'),
-(9,9,'120 Tablets','NM-MULTI-009',499.00,150,'active','2026-05-13 11:00:00','2026-05-13 11:00:00'),
-(10,10,'Set of 3','FL-RB-012',350.00,120,'active','2026-05-14 12:05:00','2026-05-14 12:05:00'),
-(11,11,'Pair','BF-ADB-011',12500.00,10,'active','2026-05-14 12:00:00','2026-05-14 12:00:00'),
-(12,12,'Incline/Flat','LF-AB-015',7999.00,7,'active','2026-05-14 12:20:00','2026-05-14 12:20:00'),
-(13,13,'12kg','PU-ADKB-013',3499.00,15,'active','2026-05-14 12:10:00','2026-05-14 12:10:00'),
-(14,14,'20kg Bar','RG-OB-014',4999.00,8,'active','2026-05-14 12:15:00','2026-05-14 12:15:00'),
-(15,15,'Standard Rack','RG-SR-016',11999.00,5,'active','2026-05-14 12:25:00','2026-05-14 12:25:00'),
-(16,16,'Standard Mat / Purple','MD-YM-018',899.00,90,'active','2026-05-15 13:05:00','2026-05-15 13:05:00'),
-(17,17,'45cm / Black','TP-FR-019',750.00,100,'active','2026-05-15 13:10:00','2026-05-15 13:10:00'),
-(18,18,'700ml / Clear','NK-SHK-020',249.00,200,'active','2026-05-15 13:15:00','2026-05-15 13:15:00'),
-(19,19,'Standard Rope','EV-JR-030',399.00,150,'active','2026-05-18 16:10:00','2026-05-18 16:10:00'),
-(20,20,'S-XL','UA-CS-021',899.00,80,'active','2026-05-16 14:00:00','2026-05-16 14:00:00'),
-(21,21,'S-XL','AD-LG-022',1299.00,70,'active','2026-05-16 14:05:00','2026-05-16 14:05:00'),
-(22,22,'M-XL','NK-RS-023',699.00,120,'active','2026-05-16 14:10:00','2026-05-16 14:10:00'),
-(23,23,'Unisex','PU-TR-024',1999.00,60,'active','2026-05-16 14:15:00','2026-05-16 14:15:00'),
-(24,24,'6lb','ON-MASS-025',1999.00,22,'active','2026-05-17 15:00:00','2026-05-17 15:00:00'),
-(25,25,'2lb','MP-VGN-026',1399.00,40,'active','2026-05-17 15:05:00','2026-05-17 15:05:00'),
-(26,26,'30 Servings','R1-NSF-027',899.00,50,'active','2026-05-17 15:10:00','2026-05-17 15:10:00'),
-(27,27,'Box of 12','DY-BAR-028',299.00,140,'active','2026-05-18 16:00:00','2026-05-18 16:00:00'),
-(28,28,'60 Softgels','NN-OMEGA-029',799.00,110,'active','2026-05-18 16:05:00','2026-05-18 16:05:00'),
-(29,29,'Pair','EV-JR-030',399.00,150,'active','2026-05-18 16:10:00','2026-05-18 16:10:00'),
-(30,30,'Door','EV-PU-DOOR',799.00,90,'active','2026-05-18 16:11:00','2026-05-18 16:11:00'),
-(31,31,'Foldable','LF-TM-2.5HP',29999.00,4,'active','2026-05-19 17:00:00','2026-05-19 17:00:00'),
-(32,32,'Compact','BF-EL-032',45999.00,3,'active','2026-05-19 17:05:00','2026-05-19 17:05:00'),
-(33,33,'Pro','MT-MG-PRO',6999.00,40,'active','2026-05-19 17:10:00','2026-05-19 17:10:00'),
-(34,34,'Pair','EV-GL-034',399.00,140,'active','2026-05-20 18:00:00','2026-05-20 18:00:00'),
-(35,35,'Pair','UA-WG-035',699.00,180,'active','2026-05-20 18:05:00','2026-05-20 18:05:00'),
-(36,36,'1kg','DY-ISO-1KG',2799.00,22,'active','2026-04-01 09:00:00','2026-04-01 09:00:00'),
-(37,37,'2lb Chocolate','ON-GS-CH-037',1299.00,60,'active','2026-04-02 09:00:00','2026-04-02 09:00:00'),
-(38,38,'XL','AD-SHK-038',349.00,180,'active','2026-05-21 19:00:00','2026-05-21 19:00:00'),
-(39,39,'Complete System','BF-RHT-038',21999.00,6,'active','2026-05-21 19:05:00','2026-05-21 19:05:00'),
-(40,40,'Medium','NK-TWL-040',249.00,200,'active','2026-05-22 20:00:00','2026-05-22 20:00:00'),
-(41,41,'2lb','ON-CASEIN-041',1299.00,35,'active','2026-05-22 20:05:00','2026-05-22 20:05:00'),
-(42,42,'2lb','DY-WI-042',1399.00,45,'active','2026-05-22 20:10:00','2026-05-22 20:10:00'),
-(43,43,'60 Capsules','MT-NOB-043',699.00,90,'active','2026-05-23 21:00:00','2026-05-23 21:00:00'),
-(44,44,'20 Tabs','NU-RET-044',299.00,150,'active','2026-05-23 21:05:00','2026-05-23 21:05:00'),
-(45,45,'Large','UA-GB-045',2499.00,40,'active','2026-05-23 21:10:00','2026-05-23 21:10:00'),
-(46,46,'Pack of 3','PU-TS-046',399.00,200,'active','2026-05-24 22:00:00','2026-05-24 22:00:00'),
-(47,47,'30 Capsules','NOW-PRO-047',599.00,120,'active','2026-05-24 22:05:00','2026-05-24 22:05:00'),
-(48,48,'Universal','NK-ARM-048',499.00,180,'active','2026-05-24 22:10:00','2026-05-24 22:10:00'),
-(49,49,'65cm','PU-SB-049',1999.00,25,'active','2026-05-25 23:00:00','2026-05-25 23:00:00'),
-(50,50,'Plate-Loaded','LF-LP-050',25999.00,2,'active','2026-05-25 23:05:00','2026-05-25 23:05:00');
-
--- PRODUCT IMAGES (3 each for first 25 products; continue as needed)
+-- PRODUCT IMAGES (2 each for products 1-50)
 INSERT INTO `fithub_app`.`product_images` (`product_id`,`image_path`,`is_primary`,`created_at`) VALUES
-(1,'uploads/products/gold-standard-1.jpg',1,'2026-05-11 09:01:00'),
-(1,'uploads/products/gold-standard-2.jpg',0,'2026-05-11 09:01:30'),
-(1,'uploads/products/gold-standard-3.jpg',0,'2026-05-11 09:02:00'),
-(2,'uploads/products/iso100-1.jpg',1,'2026-05-11 09:06:00'),
-(2,'uploads/products/iso100-2.jpg',0,'2026-05-11 09:06:30'),
-(2,'uploads/products/iso100-3.jpg',0,'2026-05-11 09:07:00'),
-(3,'uploads/products/nitrotech-1.jpg',1,'2026-05-11 09:11:00'),
-(3,'uploads/products/nitrotech-2.jpg',0,'2026-05-11 09:11:30'),
-(3,'uploads/products/nitrotech-3.jpg',0,'2026-05-11 09:12:00'),
-(10,'uploads/products/resistance-bands-1.jpg',1,'2026-05-14 12:06:00'),
-(10,'uploads/products/resistance-bands-2.jpg',0,'2026-05-14 12:06:30'),
-(10,'uploads/products/resistance-bands-3.jpg',0,'2026-05-14 12:07:00'),
-(11,'uploads/products/adjustable-dumbbell-1.jpg',1,'2026-05-14 12:01:00'),
-(11,'uploads/products/adjustable-dumbbell-2.jpg',0,'2026-05-14 12:01:30'),
-(11,'uploads/products/adjustable-dumbbell-3.jpg',0,'2026-05-14 12:02:00'),
-(16,'uploads/products/yoga-mat-1.jpg',1,'2026-05-15 13:06:00'),
-(16,'uploads/products/yoga-mat-2.jpg',0,'2026-05-15 13:06:30'),
-(16,'uploads/products/yoga-mat-3.jpg',0,'2026-05-15 13:07:00'),
-(18,'uploads/products/shaker-bottle-1.jpg',1,'2026-05-15 13:16:00'),
-(18,'uploads/products/shaker-bottle-2.jpg',0,'2026-05-15 13:16:30'),
-(18,'uploads/products/shaker-bottle-3.jpg',0,'2026-05-15 13:17:00');
+(1,'products/product-1-1.jpg',1,'2026-05-11 09:01:00'),
+(1,'products/product-1-2.jpg',0,'2026-05-11 09:01:30'),
+(2,'products/product-2-1.jpg',1,'2026-05-11 09:02:00'),
+(2,'products/product-2-2.jpg',0,'2026-05-11 09:02:30'),
+(3,'products/product-3-1.jpg',1,'2026-05-11 09:03:00'),
+(3,'products/product-3-2.jpg',0,'2026-05-11 09:03:30'),
+(4,'products/product-4-1.jpg',1,'2026-05-11 09:04:00'),
+(4,'products/product-4-2.jpg',0,'2026-05-11 09:04:30'),
+(5,'products/product-5-1.jpg',1,'2026-05-11 09:05:00'),
+(5,'products/product-5-2.jpg',0,'2026-05-11 09:05:30'),
+(6,'products/product-6-1.jpg',1,'2026-05-11 09:06:00'),
+(6,'products/product-6-2.jpg',0,'2026-05-11 09:06:30'),
+(7,'products/product-7-1.jpg',1,'2026-05-11 09:07:00'),
+(7,'products/product-7-2.jpg',0,'2026-05-11 09:07:30'),
+(8,'products/product-8-1.jpg',1,'2026-05-11 09:08:00'),
+(8,'products/product-8-2.jpg',0,'2026-05-11 09:08:30'),
+(9,'products/product-9-1.jpg',1,'2026-05-11 09:09:00'),
+(9,'products/product-9-2.jpg',0,'2026-05-11 09:09:30'),
+(10,'products/product-10-1.jpg',1,'2026-05-11 09:10:00'),
+(10,'products/product-10-2.jpg',0,'2026-05-11 09:10:30'),
+(11,'products/product-11-1.jpg',1,'2026-05-11 09:11:00'),
+(11,'products/product-11-2.jpg',0,'2026-05-11 09:11:30'),
+(12,'products/product-12-1.jpg',1,'2026-05-11 09:12:00'),
+(12,'products/product-12-2.jpg',0,'2026-05-11 09:12:30'),
+(13,'products/product-13-1.jpg',1,'2026-05-11 09:13:00'),
+(13,'products/product-13-2.jpg',0,'2026-05-11 09:13:30'),
+(14,'products/product-14-1.jpg',1,'2026-05-11 09:14:00'),
+(14,'products/product-14-2.jpg',0,'2026-05-11 09:14:30'),
+(15,'products/product-15-1.jpg',1,'2026-05-11 09:15:00'),
+(15,'products/product-15-2.jpg',0,'2026-05-11 09:15:30'),
+(16,'products/product-16-1.jpg',1,'2026-05-11 09:16:00'),
+(16,'products/product-16-2.jpg',0,'2026-05-11 09:16:30'),
+(17,'products/product-17-1.jpg',1,'2026-05-11 09:17:00'),
+(17,'products/product-17-2.jpg',0,'2026-05-11 09:17:30'),
+(18,'products/product-18-1.jpg',1,'2026-05-11 09:18:00'),
+(18,'products/product-18-2.jpg',0,'2026-05-11 09:18:30'),
+(19,'products/product-19-1.jpg',1,'2026-05-11 09:19:00'),
+(19,'products/product-19-2.jpg',0,'2026-05-11 09:19:30'),
+(20,'products/product-20-1.jpg',1,'2026-05-11 09:20:00'),
+(20,'products/product-20-2.jpg',0,'2026-05-11 09:20:30'),
+(21,'products/product-21-1.jpg',1,'2026-05-11 09:21:00'),
+(21,'products/product-21-2.jpg',0,'2026-05-11 09:21:30'),
+(22,'products/product-22-1.jpg',1,'2026-05-11 09:22:00'),
+(22,'products/product-22-2.jpg',0,'2026-05-11 09:22:30'),
+(23,'products/product-23-1.jpg',1,'2026-05-11 09:23:00'),
+(23,'products/product-23-2.jpg',0,'2026-05-11 09:23:30'),
+(24,'products/product-24-1.jpg',1,'2026-05-11 09:24:00'),
+(24,'products/product-24-2.jpg',0,'2026-05-11 09:24:30'),
+(25,'products/product-25-1.jpg',1,'2026-05-11 09:25:00'),
+(25,'products/product-25-2.jpg',0,'2026-05-11 09:25:30'),
+(26,'products/product-26-1.jpg',1,'2026-05-11 09:26:00'),
+(26,'products/product-26-2.jpg',0,'2026-05-11 09:26:30'),
+(27,'products/product-27-1.jpg',1,'2026-05-11 09:27:00'),
+(27,'products/product-27-2.jpg',0,'2026-05-11 09:27:30'),
+(28,'products/product-28-1.jpg',1,'2026-05-11 09:28:00'),
+(28,'products/product-28-2.jpg',0,'2026-05-11 09:28:30'),
+(29,'products/product-29-1.jpg',1,'2026-05-11 09:29:00'),
+(29,'products/product-29-2.jpg',0,'2026-05-11 09:29:30'),
+(30,'products/product-30-1.jpg',1,'2026-05-11 09:30:00'),
+(30,'products/product-30-2.jpg',0,'2026-05-11 09:30:30'),
+(31,'products/product-31-1.jpg',1,'2026-05-11 09:31:00'),
+(31,'products/product-31-2.jpg',0,'2026-05-11 09:31:30'),
+(32,'products/product-32-1.jpg',1,'2026-05-11 09:32:00'),
+(32,'products/product-32-2.jpg',0,'2026-05-11 09:32:30'),
+(33,'products/product-33-1.jpg',1,'2026-05-11 09:33:00'),
+(33,'products/product-33-2.jpg',0,'2026-05-11 09:33:30'),
+(34,'products/product-34-1.jpg',1,'2026-05-11 09:34:00'),
+(34,'products/product-34-2.jpg',0,'2026-05-11 09:34:30'),
+(35,'products/product-35-1.jpg',1,'2026-05-11 09:35:00'),
+(35,'products/product-35-2.jpg',0,'2026-05-11 09:35:30'),
+(36,'products/product-36-1.jpg',1,'2026-05-11 09:36:00'),
+(36,'products/product-36-2.jpg',0,'2026-05-11 09:36:30'),
+(37,'products/product-37-1.jpg',1,'2026-05-11 09:37:00'),
+(37,'products/product-37-2.jpg',0,'2026-05-11 09:37:30'),
+(38,'products/product-38-1.jpg',1,'2026-05-11 09:38:00'),
+(38,'products/product-38-2.jpg',0,'2026-05-11 09:38:30'),
+(39,'products/product-39-1.jpg',1,'2026-05-11 09:39:00'),
+(39,'products/product-39-2.jpg',0,'2026-05-11 09:39:30'),
+(40,'products/product-40-1.jpg',1,'2026-05-11 09:40:00'),
+(40,'products/product-40-2.jpg',0,'2026-05-11 09:40:30'),
+(41,'products/product-41-1.jpg',1,'2026-05-11 09:41:00'),
+(41,'products/product-41-2.jpg',0,'2026-05-11 09:41:30'),
+(42,'products/product-42-1.jpg',1,'2026-05-11 09:42:00'),
+(42,'products/product-42-2.jpg',0,'2026-05-11 09:42:30'),
+(43,'products/product-43-1.jpg',1,'2026-05-11 09:43:00'),
+(43,'products/product-43-2.jpg',0,'2026-05-11 09:43:30'),
+(44,'products/product-44-1.jpg',1,'2026-05-11 09:44:00'),
+(44,'products/product-44-2.jpg',0,'2026-05-11 09:44:30'),
+(45,'products/product-45-1.jpg',1,'2026-05-11 09:45:00'),
+(45,'products/product-45-2.jpg',0,'2026-05-11 09:45:30'),
+(46,'products/product-46-1.jpg',1,'2026-05-11 09:46:00'),
+(46,'products/product-46-2.jpg',0,'2026-05-11 09:46:30'),
+(47,'products/product-47-1.jpg',1,'2026-05-11 09:47:00'),
+(47,'products/product-47-2.jpg',0,'2026-05-11 09:47:30'),
+(48,'products/product-48-1.jpg',1,'2026-05-11 09:48:00'),
+(48,'products/product-48-2.jpg',0,'2026-05-11 09:48:30'),
+(49,'products/product-49-1.jpg',1,'2026-05-11 09:49:00'),
+(49,'products/product-49-2.jpg',0,'2026-05-11 09:49:30'),
+(50,'products/product-50-1.jpg',1,'2026-05-11 09:50:00'),
+(50,'products/product-50-2.jpg',0,'2026-05-11 09:50:30');
 
 -- SHIPPING ADDRESSES
 INSERT INTO `fithub_app`.`shipping_addresses` (`id`,`user_id`,`recipient_name`,`contact_number`,`address_line`,`city`,`province`,`postal_code`,`is_default`,`created_at`,`address_line_2`) VALUES
 (1,2,'Janine Espares','09171234567','123 Rizal St., Brgy. Malinis','Makati','Metro Manila','1200',1,'2026-06-05 11:20:00',NULL),
 (2,3,'Stefanie Espinar','09179876543','45 Bonifacio Ave., Brgy. Luntian','Quezon City','Metro Manila','1100',1,'2026-06-07 14:35:00','Apt 5B');
-
--- CARTS
-INSERT INTO `fithub_app`.`carts` (`id`,`user_id`,`status`,`created_at`) VALUES
-(1,2,'active','2026-06-10 10:00:00'),
-(2,3,'active','2026-06-11 11:00:00');
-
--- CART ITEMS (Janine: Gold Standard Whey ×2, Resistance Bands ×1)
-INSERT INTO `fithub_app`.`cart_items` (`cart_id`,`product_variant_id`,`quantity`,`created_at`) VALUES
-(1,1,2,'2026-06-10 10:05:00'),
-(1,10,1,'2026-06-10 10:06:00');
-
--- CART ITEMS (Stefanie: Yoga Mat ×1, Shaker Bottle ×2, Adjustable Dumbbells ×1)
-INSERT INTO `fithub_app`.`cart_items` (`cart_id`,`product_variant_id`,`quantity`,`created_at`) VALUES
-(2,16,1,'2026-06-11 11:05:00'),
-(2,18,2,'2026-06-11 11:06:00'),
-(2,11,1,'2026-06-11 11:07:00');
-
--- ORDERS
-INSERT INTO `fithub_app`.`orders` (`id`,`user_id`,`order_number`,`recipient_name`,`contact_number`,`address_line`,`city`,`province`,`postal_code`,`total_amount`,`status`,`created_at`) VALUES
-(1,2,'100001','Janine Espares','09171234567','123 Rizal St., Brgy. Malinis','Makati','Metro Manila','1200',1649.00,'completed','2026-06-12 09:00:00'),
-(2,3,'100002','Stefanie Espinar','09179876543','45 Bonifacio Ave., Brgy. Luntian','Quezon City','Metro Manila','1100',14297.00,'pending','2026-06-13 15:30:00');
-
--- ORDER ITEMS
-INSERT INTO `fithub_app`.`order_items` (`order_id`,`product_variant_id`,`quantity`,`unit_price`,`subtotal`,`created_at`) VALUES
-(1,1,1,1299.00,1299.00,'2026-06-12 09:01:00'),
-(1,10,1,350.00,350.00,'2026-06-12 09:02:00'),
-(2,16,1,899.00,899.00,'2026-06-13 15:31:00'),
-(2,11,1,12500.00,12500.00,'2026-06-13 15:32:00'),
-(2,18,2,249.00,498.00,'2026-06-13 15:33:00');
-
--- PAYMENTS
-INSERT INTO `fithub_app`.`payments` (`id`,`order_id`,`amount`,`payment_method`,`payment_status`,`reference_number`,`paid_at`,`created_at`) VALUES
-(1,1,1649.00,'gcash','paid','GCASH-REF-100001','2026-06-12 09:10:00','2026-06-12 09:10:00'),
-(2,2,14297.00,'cash_on_delivery','pending',NULL,NULL,'2026-06-13 15:40:00');
-
--- REVIEWS
-INSERT INTO `fithub_app`.`reviews` (`user_id`,`product_id`,`rating`,`comment`,`created_at`) VALUES
-(2,1,5,'Excellent whey — great taste and mixes well.','2026-06-20 10:00:00'),
-(2,10,4,'Resistance bands are durable and versatile for home workouts.','2026-06-20 10:05:00'),
-(3,16,5,'Yoga mat is comfy and non-slip for my daily practice.','2026-06-21 12:00:00'),
-(3,11,4,'Adjustable dumbbells are solid and saved space in my apartment.','2026-06-21 12:10:00');
 
 -- COUPONS
 CREATE TABLE IF NOT EXISTS `fithub_app`.`coupons` (
@@ -542,27 +527,6 @@ CREATE TABLE IF NOT EXISTS `fithub_app`.`inventory` (
     ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
-INSERT INTO `fithub_app`.`inventory` (`product_variant_id`,`current_stock`,`reserved_stock`,`sold_quantity`,`updated_at`) VALUES
-(1,50,3,12,'2026-06-30 08:00:00'),
-(10,120,4,18,'2026-06-30 08:00:00'),
-(11,10,1,3,'2026-06-30 08:00:00'),
-(16,90,2,12,'2026-06-30 08:00:00'),
-(18,200,10,25,'2026-06-30 08:00:00');
-
--- Additional sample orders for dashboard metrics
-INSERT INTO `fithub_app`.`orders` (`id`,`user_id`,`order_number`,`recipient_name`,`contact_number`,`address_line`,`city`,`province`,`postal_code`,`total_amount`,`status`,`created_at`) VALUES
-(3,2,'100003','Janine Espares','09171234567','123 Rizal St., Brgy. Malinis','Makati','Metro Manila','1200',1599.00,'completed','2026-06-02 09:00:00'),
-(4,3,'100004','Stefanie Espinar','09179876543','45 Bonifacio Ave., Brgy. Luntian','Quezon City','Metro Manila','1100',899.00,'completed','2026-06-04 10:30:00');
-
-INSERT INTO `fithub_app`.`order_items` (`order_id`,`product_variant_id`,`quantity`,`unit_price`,`subtotal`,`created_at`) VALUES
-(3,2,1,1599.00,1599.00,'2026-06-02 09:01:00'),
-(4,6,1,899.00,899.00,'2026-06-04 10:31:00');
-
-INSERT INTO `fithub_app`.`payments` (`id`,`order_id`,`amount`,`payment_method`,`payment_status`,`reference_number`,`paid_at`,`created_at`) VALUES
-(3,3,1599.00,'gcash','paid','GCASH-REF-100003','2026-06-02 09:20:00','2026-06-02 09:20:00'),
-(4,4,899.00,'bank_transfer','paid','BANK-REF-100004','2026-06-04 10:40:00','2026-06-04 10:40:00');
-
--- End seed block
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

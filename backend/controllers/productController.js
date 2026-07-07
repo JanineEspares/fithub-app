@@ -1,3 +1,4 @@
+const path = require('path');
 const productService = require('../services/productService');
 const apiResponse = require('../utils/apiResponse');
 const { validationResult } = require('express-validator');
@@ -222,11 +223,14 @@ exports.createProduct = async (req, res, next) => {
         const product = await productService.createProduct(req.body);
 
         if (req.files && req.files.length > 0) {
-            const images = req.files.map((file, index) => ({
-                product_id: product.id,
-                image_path: file.path,
-                is_primary: index === 0
-            }));
+            const images = req.files.map((file, index) => {
+                const imagePath = path.relative('uploads', file.path).replace(/\\/g, '/');
+                return {
+                    product_id: product.id,
+                    image_path: imagePath,
+                    is_primary: index === 0
+                };
+            });
 
             await productService.attachProductImages(images);
         }

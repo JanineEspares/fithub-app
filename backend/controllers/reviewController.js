@@ -26,7 +26,10 @@ exports.createReview = async (req, res, next) => {
                 {
                     model: db.Order,
                     as: 'order',
-                    where: { user_id: req.user.id }
+                    where: {
+                        user_id: req.user.id,
+                        status: 'delivered'
+                    }
                 },
                 {
                     model: db.ProductVariant,
@@ -39,7 +42,7 @@ exports.createReview = async (req, res, next) => {
         if (!hasPurchased) {
             return res.status(403).json({
                 success: false,
-                message: 'Reviews may only be submitted for products you have purchased.'
+                message: 'Reviews may only be submitted for products you have received.'
             });
         }
 
@@ -91,7 +94,10 @@ exports.checkEligibility = async (req, res, next) => {
                 {
                     model: db.Order,
                     as: 'order',
-                    where: { user_id: req.user.id }
+                    where: {
+                        user_id: req.user.id,
+                        status: 'delivered'
+                    }
                 },
                 {
                     model: db.ProductVariant,
