@@ -33,7 +33,8 @@ const FitHubItem = (() => {
         productBreadcrumb: $('#breadcrumb-product'),
         categoryBadge: $('#item-category'),
         overallRating: $('#overall-rating'),
-        totalReviews: $('#total-reviews')
+        totalReviews: $('#total-reviews'),
+        reviewFormContainer: $('#review-form-container')
     };
 
     /**
@@ -66,6 +67,11 @@ const FitHubItem = (() => {
         elements.addToCartBtn.on('click', handleAddToCart);
         elements.addToWishlistBtn.on('click', handleAddToWishlist);
         
+        $(document).on('submit', '#review-form', function(event) {
+            event.preventDefault();
+            handleReviewSubmit();
+        });
+
         // Thumbnail selection
         $(document).on('click', '.product-thumbnail', function() {
             const imageUrl = $(this).data('image-url');
@@ -84,6 +90,7 @@ const FitHubItem = (() => {
                 if (response.success && response.data) {
                     currentProduct = response.data;
                     renderProductDetails(currentProduct);
+                    renderReviewForm();
                     loadRelatedProducts(currentProduct.category_id, productId);
                 } else {
                     showError('Product not found');
@@ -373,6 +380,110 @@ const FitHubItem = (() => {
 
         // This will be implemented later
         Swal.fire('Added to Wishlist!', 'Product added to your wishlist.', 'success');
+    }
+
+    function renderReviewForm() {
+        const user = window.FitHubUtils.getUser();
+
+        if (!elements.reviewFormContainer.length) {
+            return;
+        }
+
+        if (!user) {
+            elements.reviewFormContainer.html(`
+                <div class="card card-surface p-4 mb-4">
+                    <div class="text-center">
+                        <p class="mb-2">Login to leave a product review.</p>
+                        <a href="login.html" class="btn btn-brand btn-sm">Sign in</a>
+                    </div>
+                </div>
+            `);
+            return;
+        }
+
+        // Check whether the user actually purchased this product before rendering the form
+        window.FitHubUtils.apiRequest(`/reviews/eligible/${currentProduct.id}`, { method: 'GET' })
+            .done((response) => {
+                const eligible = response.success && response.data && response.data.eligible;
+                if (eligible) {
+                    elements.reviewFormContainer.html(`
+                        <div class="card card-surface p-4 mb-4">
+                            <h5 class="mb-3">Leave a review</h5>
+                            <form id="review-form">
+                                <div class="mb-3">
+                                    <label class="form-label">Rating</label>
+                                    <select class="form-select" id="review-rating" required>
+                                        <option value="">Select rating</option>
+                                        <option value="5">5 - Excellent</option>
+                                        <option value="4">4 - Good</option>
+                                        <option value="3">3 - Average</option>
+                                        <option value="2">2 - Fair</option>
+                                        <option value="1">1 - Poor</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Comment</label>
+                                    <textarea class="form-control" id="review-comment" rows="4" placeholder="Tell us what you liked or what can be improved"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-brand">Submit review</button>
+                            </form>
+                        </div>
+                    `);
+                } else {
+                    elements.reviewFormContainer.html(`
+                        <div class="card card-surface p-4 mb-4">
+                            <div class="text-center">
+                                <p class="mb-2">You can submit a review after purchasing this product.</p>
+                                <a href="orders.html" class="btn btn-outline-secondary btn-sm">View Orders</a>
+                            </div>
+                        </div>
+                    `);
+                }
+            })
+            .fail(() => {
+                elements.reviewFormContainer.html(`
+                    <div class="card card-surface p-4 mb-4">
+                        <div class="text-center">
+                            <p class="mb-2 text-danger">Unable to verify review eligibility right now.</p>
+                        </div>
+                    </div>
+                `);
+            });
+    }
+
+    function handleReviewSubmit() {
+        if (!currentProduct) return;
+
+        const user = window.FitHubUtils.getUser();
+        if (!user) {
+            Swal.fire('Login Required', 'Please login to submit a review.', 'info');
+            return;
+        }
+
+        const rating = parseInt($('#review-rating').val(), 10);
+        const comment = $('#review-comment').val().trim();
+
+        if (!rating || rating < 1 || rating > 5) {
+            Swal.fire('Invalid Rating', 'Please select a rating between 1 and 5.', 'warning');
+            return;
+        }
+
+        window.FitHubUtils.apiRequest('/reviews', {
+            method: 'POST',
+            data: {
+                product_id: currentProduct.id,
+                rating,
+                comment
+            }
+        })
+        .done(() => {
+            Swal.fire('Thanks for your review!', 'Your feedback has been submitted.', 'success');
+            loadProductDetails(currentProduct.id);
+        })
+        .fail((xhr) => {
+            const message = xhr.responseJSON?.message || 'Unable to submit review at this time.';
+            Swal.fire('Review Failed', message, 'error');
+        });
     }
 
     /**

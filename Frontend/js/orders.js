@@ -15,7 +15,8 @@ $(function () {
       { data: 'order_number', defaultContent: '-' },
       { data: 'recipient_name', defaultContent: '-' },
       { data: 'status', defaultContent: '-' },
-      { data: null, render: (data) => `<span class="text-muted">$${Number(data.total_amount || 0).toFixed(2)}</span>` }
+      { data: null, render: (data) => `<span class="text-muted">$${Number(data.total_amount || 0).toFixed(2)}</span>` },
+      { data: null, orderable: false, searchable: false, render: (data) => `<a href="order-details.html?id=${data.id}" class="btn btn-sm btn-outline-primary">View</a>` }
     ]
   });
 });

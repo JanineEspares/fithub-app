@@ -180,8 +180,33 @@
             </div>
           </div>
 
-          <!-- Reviews List -->
+          <!-- Review Form -->
           <div class="col-lg-9">
+            <div id="review-form-container" class="card card-surface p-4 mb-4">
+              <h5 class="mb-3">Write a Review</h5>
+              <p class="text-muted">You can submit a review after purchasing this product.</p>
+              <form id="review-form">
+                <input type="hidden" id="review-product-id" name="product_id" value="">
+                <div class="mb-3">
+                  <label for="review-rating" class="form-label">Rating</label>
+                  <select id="review-rating" name="rating" class="form-select" required>
+                    <option value="">Choose rating</option>
+                    <option value="5">5 - Excellent</option>
+                    <option value="4">4 - Very good</option>
+                    <option value="3">3 - Good</option>
+                    <option value="2">2 - Fair</option>
+                    <option value="1">1 - Poor</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="review-comment" class="form-label">Comment</label>
+                  <textarea id="review-comment" name="comment" class="form-control" rows="4" placeholder="Tell others what you liked or disliked"></textarea>
+                </div>
+                <button type="submit" class="btn btn-brand">Submit Review</button>
+              </form>
+            </div>
+
+            <!-- Reviews List -->
             <div id="reviews-list">
               <p class="text-muted text-center py-4">Loading reviews...</p>
             </div>

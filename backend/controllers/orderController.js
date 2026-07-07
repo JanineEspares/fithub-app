@@ -21,18 +21,58 @@ exports.index = async (req, res, next) => {
     }
 };
 
+exports.show = async (req, res, next) => {
+    try {
+        const order = await db.Order.findOne({
+            where: { id: req.params.id },
+            include: [{
+                model: db.OrderItem,
+                as: 'items',
+                include: [{
+                    model: db.ProductVariant,
+                    as: 'productVariant',
+                    include: [{ model: db.Product, as: 'product' }]
+                }]
+            }]
+        });
+
+        if (!order || (req.user.role !== 'admin' && order.user_id !== req.user.id)) {
+            return res.status(404).json({
+                success: false,
+                message: 'Order not found.'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Order retrieved successfully.',
+            data: order
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 exports.create = async (req, res, next) => {
     try {
-        const items = Array.isArray(req.body.items) ? req.body.items : [];
+        const cart = await db.Cart.findOne({
+            where: { user_id: req.user.id, status: 'active' },
+            include: [{
+                model: db.CartItem,
+                as: 'items',
+                include: [{ model: db.ProductVariant, as: 'productVariant' }]
+            }]
+        });
 
-        if (!items.length) {
+        if (!cart || !cart.items || cart.items.length === 0) {
             return res.status(400).json({
                 success: false,
-                message: 'At least one item is required for checkout.'
+                message: 'Your cart is empty. Add items before checking out.'
             });
         }
 
         let subtotal = 0;
+        const shipping = 75;
         const order = await db.Order.create({
             user_id: req.user.id,
             order_number: buildOrderNumber(),
@@ -46,34 +86,19 @@ exports.create = async (req, res, next) => {
             status: 'pending'
         });
 
-        for (const item of items) {
-            const quantity = Math.max(1, Number(item.quantity || 1));
-            let variant = null;
-
-            if (item.product_variant_id) {
-                variant = await db.ProductVariant.findByPk(item.product_variant_id);
-            } else if (item.product_id) {
-                const product = await db.Product.findByPk(item.product_id);
-                if (product) {
-                    variant = await db.ProductVariant.findOne({
-                        where: { product_id: product.id, status: 'active' }
-                    });
-
-                    if (!variant) {
-                        variant = await db.ProductVariant.create({
-                            product_id: product.id,
-                            variant_name: 'Default',
-                            sku: `SKU-${product.id}-${Date.now()}`,
-                            price: product.base_price,
-                            stock_quantity: 100,
-                            status: 'active'
-                        });
-                    }
-                }
-            }
+        for (const cartItem of cart.items) {
+            const quantity = Math.max(1, Number(cartItem.quantity || 1));
+            const variant = cartItem.productVariant;
 
             if (!variant) {
                 continue;
+            }
+
+            if (variant.stock_quantity !== undefined && quantity > variant.stock_quantity) {
+                return res.status(400).json({
+                    success: false,
+                    message: `Insufficient stock for ${variant.variant_name || 'a product'}.`
+                });
             }
 
             const unitPrice = Number(variant.price || 0);
@@ -92,22 +117,25 @@ exports.create = async (req, res, next) => {
             await variant.update({ stock_quantity: nextStock });
         }
 
-        await order.update({ total_amount: subtotal });
+        const totalAmount = subtotal + shipping;
+        await order.update({ total_amount: totalAmount });
 
         await db.Transaction.create({
             order_id: order.id,
             user_id: req.user.id,
-            amount: subtotal,
+            amount: totalAmount,
             payment_method: req.body.payment_method || 'cod',
             status: 'pending'
         });
+
+        await cart.update({ status: 'checked_out' });
 
         res.status(201).json({
             success: true,
             message: 'Order created successfully.',
             data: {
                 order,
-                total: subtotal
+                total: totalAmount
             }
         });
     } catch (error) {
