@@ -315,11 +315,22 @@ a:focus-visible {
 
 /* Product page specific tweaks */
 #main-product-image {
-  border-radius: 12px;
+  border-radius: 16px;
   object-fit: cover;
   width: 100%;
   height: 100%;
   transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.product-info-card {
+  border-radius: 18px;
+  padding: 1.25rem;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+  box-shadow: 0 8px 24px rgba(2, 6, 23, 0.24);
+}
+
+.product-details-stack .card-surface {
+  border-radius: 16px;
 }
 
 .product-card {

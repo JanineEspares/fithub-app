@@ -266,8 +266,8 @@ const FitHubShop = (() => {
             html += `
                 <div class="col-12 col-sm-6 col-lg-4 product-card-wrapper">
                     <div class="card card-surface product-card h-100">
-                        <div class="product-image-container position-relative">
-                            <img src="${imageUrl}" alt="${product.name}" class="card-img-top" 
+                        <div class="position-relative">
+                            <img src="${imageUrl}" alt="${product.name}" class="card-img-top"
                                  onerror="this.src='/assets/images/placeholder.png'">
                             <span class="badge ${stockClass} position-absolute top-2 end-2">
                                 ${stockText}
@@ -280,11 +280,15 @@ const FitHubShop = (() => {
                             ` : ''}
                         </div>
                         <div class="card-body d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                                <span class="badge bg-light">${product.category?.name || 'Featured'}</span>
+                                <span class="price-pill">${window.FitHubUtils.formatCurrency(product.base_price)}</span>
+                            </div>
                             <h6 class="card-title fw-bold limit-lines-2">${product.name}</h6>
-                            ${product.brand ? `<small class="text-muted mb-2">${product.brand}</small>` : ''}
-                            <p class="card-text text-muted small limit-lines-2 flex-grow-1">${product.description || 'No description'}</p>
+                            ${product.brand ? `<div class="product-meta">${product.brand}</div>` : ''}
+                            <p class="card-text text-muted small limit-lines-2 flex-grow-1 mb-3">${product.description || 'No description'}</p>
                             <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top">
-                                                <span class="h5 text-brand mb-0">${window.FitHubUtils.formatCurrency(product.base_price)}</span>
+                                <span class="small text-muted">${inStock ? 'Ready to ship' : 'Unavailable'}</span>
                                 <div class="btn-group btn-group-sm" role="group">
                                     <button class="btn btn-outline-secondary view-details-btn" type="button" data-product-id="${product.id}">
                                         <i class="fas fa-eye"></i>
