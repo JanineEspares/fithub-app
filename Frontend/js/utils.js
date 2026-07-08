@@ -4,11 +4,23 @@ window.FitHubUtils = {
   },
   getUser() {
     const value = localStorage.getItem(window.FitHubConfig.userKey);
-    return value ? JSON.parse(value) : null;
+    if (!value) return null;
+    try {
+      return JSON.parse(value);
+    } catch (error) {
+      return null;
+    }
   },
   setSession(payload) {
-    localStorage.setItem(window.FitHubConfig.tokenKey, payload.token);
-    localStorage.setItem(window.FitHubConfig.userKey, JSON.stringify(payload.user));
+    const token = payload.token || payload.accessToken || payload.jwt_token;
+    const user = payload.user || payload.customer || payload.profile || null;
+
+    if (!token) return;
+
+    localStorage.setItem(window.FitHubConfig.tokenKey, token);
+    if (user) {
+      localStorage.setItem(window.FitHubConfig.userKey, JSON.stringify(user));
+    }
   },
   clearSession() {
     localStorage.removeItem(window.FitHubConfig.tokenKey);

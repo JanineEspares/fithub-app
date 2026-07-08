@@ -40,8 +40,11 @@ $(function () {
       data: payload
     })
       .done((response) => {
-        if (response.data?.token) {
-          window.FitHubUtils.setSession(response.data);
+        const payload = response.data || response;
+        if (payload?.token || payload?.accessToken || payload?.jwt_token) {
+          window.FitHubUtils.setSession(payload);
+        } else if (response.data?.user) {
+          localStorage.setItem(window.FitHubConfig.userKey, JSON.stringify(response.data.user));
         }
 
         const user = window.FitHubUtils.getUser();

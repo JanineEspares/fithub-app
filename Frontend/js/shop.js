@@ -221,8 +221,10 @@ const FitHubShop = (() => {
                 isLoading = false;
                 elements.loadingSpinner.addClass('d-none');
 
-                if (response.success && response.data && response.data.products) {
-                    const { products, pagination } = response.data;
+                if (response.success && response.data) {
+                    const payload = response.data;
+                    const products = Array.isArray(payload) ? payload : (payload.products || []);
+                    const pagination = payload.pagination || { total: products.length, page: 1, pages: 1 };
                     totalProducts = pagination.total;
                     totalPages = pagination.pages;
 

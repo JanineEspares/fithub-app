@@ -265,7 +265,8 @@ const FitHubItem = (() => {
         window.FitHubUtils.apiRequest(`/products/category/${categoryId}?limit=4`, { method: 'GET' })
             .done((response) => {
                 if (response.success && response.data) {
-                    const products = response.data.products || [];
+                    const payload = response.data;
+                    const products = Array.isArray(payload) ? payload : (payload.products || []);
                     relatedProducts = products
                         .filter(p => p.id !== currentProductId)
                         .slice(0, 4);
