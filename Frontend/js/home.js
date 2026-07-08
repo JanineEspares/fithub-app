@@ -21,13 +21,16 @@ $(function () {
       }
 
       $('#home-products-grid').append(products.map((product) => `
-        <article class="product-card">
-          <div class="product-body">
-            <div class="product-name">${product.name || 'Product'}</div>
-            <div class="text-muted small">${product.brand || 'FitHub'}</div>
-            <div class="text-muted small mt-2">${(product.description || 'Designed for training, recovery, and everyday fitness.').slice(0, 100)}</div>
-            <div class="product-price mt-2">${window.FitHubUtils.formatCurrency(product.base_price)}</div>
-            <div class="d-flex flex-wrap gap-2 mt-3">
+        <article class="card card-surface product-card h-100">
+          <div class="card-body d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+              <span class="badge bg-light text-uppercase">${product.category?.name || 'Featured'}</span>
+              <span class="price-pill">${window.FitHubUtils.formatCurrency(product.base_price)}</span>
+            </div>
+            <h3 class="card-title mb-1">${product.name || 'Product'}</h3>
+            <p class="text-muted small mb-2">${product.brand || 'FitHub'}</p>
+            <p class="text-muted small mb-3">${(product.description || 'Designed for training, recovery, and everyday fitness.').slice(0, 100)}</p>
+            <div class="mt-auto d-flex flex-wrap gap-2">
               <a class="btn btn-sm btn-outline-brand" href="item.html?id=${product.id}">View Details</a>
               <a class="btn btn-sm btn-brand" href="item.html?id=${product.id}">Add to Cart</a>
             </div>
