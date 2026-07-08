@@ -1,5 +1,6 @@
 $(function () {
   if (document.body.dataset.page !== 'cart') return;
+  if (!window.FitHubUtils.requireCustomerAccess('login.html')) return;
 
   const renderCart = (cart) => {
     const items = cart?.items || [];

@@ -9,12 +9,18 @@
     </button>
     <div class="collapse navbar-collapse" id="mainNav">
       <ul class="navbar-nav ms-auto gap-lg-2">
+        <li class="nav-item"><a class="nav-link" href="home.html">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
-        <li class="nav-item"><a class="nav-link" href="cart.html">Cart</a></li>
-        <li class="nav-item"><a class="nav-link" href="orders.html">Orders</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        <li class="nav-item customer-only d-none"><a class="nav-link" href="cart.html">Cart</a></li>
+        <li class="nav-item customer-only d-none"><a class="nav-link" href="orders.html">Orders</a></li>
+        <li class="nav-item customer-only d-none"><a class="nav-link" href="profile.html">Profile</a></li>
         <li class="nav-item"><a class="nav-link" id="admin-dashboard-link" href="dashboard.html">Dashboard</a></li>
-        <li class="nav-item"><a class="btn btn-sm btn-brand" href="login.html" id="auth-link">Login</a></li>
-        <li class="nav-item"><button class="btn btn-sm btn-outline-brand d-none" type="button" id="logout-btn">Logout</button></li>
+        <li class="nav-item guest-only"><a class="btn btn-sm btn-brand" href="login.html" id="auth-link">Login</a></li>
+        <li class="nav-item guest-only"><a class="btn btn-sm btn-outline-brand" href="register.html" id="register-link">Register</a></li>
+        <li class="nav-item customer-only d-none"><span class="nav-link fw-semibold" id="customer-name">Customer</span></li>
+        <li class="nav-item customer-only d-none"><button class="btn btn-sm btn-outline-brand" type="button" id="logout-btn">Logout</button></li>
       </ul>
     </div>
   </div>

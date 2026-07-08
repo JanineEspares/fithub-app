@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 const authController = require('../controllers/authController');
+const orderController = require('../controllers/orderController');
 const registerValidator = require('../validators/registerValidator');
 const loginValidator = require('../validators/loginValidator');
 const authMiddleware = require('../middleware/authMiddleware');
@@ -115,6 +116,13 @@ router.post(
     authMiddleware,
     customerMiddleware.customerOnly,
     authController.changePassword
+);
+
+router.get(
+    '/customer/orders',
+    authMiddleware,
+    customerMiddleware.customerOnly,
+    orderController.customerOrders
 );
 
 module.exports = router;

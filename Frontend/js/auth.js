@@ -2,6 +2,7 @@ $(function () {
   window.FitHubUtils.loadPartials(() => {
     const user = window.FitHubUtils.getUser();
     const isAdmin = user && user.role === 'admin';
+    const isCustomer = user && user.role === 'customer';
     const isLoggedIn = !!user;
 
     if (isAdmin) {
@@ -10,17 +11,35 @@ $(function () {
       $('#admin-dashboard-link').hide();
     }
 
+    $('.guest-only').toggleClass('d-none', isLoggedIn);
+    $('.customer-only').toggleClass('d-none', !isCustomer);
+
+    if (isCustomer && user.first_name) {
+      $('#customer-name').text(`${user.first_name}`);
+    }
+
     if (isLoggedIn) {
       $('#auth-link').addClass('d-none');
+      $('#register-link').addClass('d-none');
       $('#logout-btn').removeClass('d-none');
     } else {
       $('#auth-link').removeClass('d-none');
+      $('#register-link').removeClass('d-none');
       $('#logout-btn').addClass('d-none');
     }
 
     $('#logout-btn').off('click').on('click', function () {
-      window.FitHubUtils.clearSession();
-      window.location.href = 'login.html';
+      const token = window.FitHubUtils.getToken();
+      if (token) {
+        window.FitHubUtils.apiRequest('/auth/logout', { method: 'POST' })
+          .always(() => {
+            window.FitHubUtils.clearSession();
+            window.location.href = 'home.html';
+          });
+      } else {
+        window.FitHubUtils.clearSession();
+        window.location.href = 'home.html';
+      }
     });
   });
 
@@ -48,7 +67,9 @@ $(function () {
         }
 
         const user = window.FitHubUtils.getUser();
-        const redirectTarget = form.data('redirect') || (user?.role === 'admin' ? 'dashboard.html' : 'home.html');
+        const pendingRedirect = window.FitHubUtils.getRedirectAfterLogin();
+        const redirectTarget = pendingRedirect || form.data('redirect') || (user?.role === 'admin' ? 'dashboard.html' : 'home.html');
+        window.FitHubUtils.clearRedirectAfterLogin();
         window.location.href = redirectTarget;
       })
       .fail((xhr) => {

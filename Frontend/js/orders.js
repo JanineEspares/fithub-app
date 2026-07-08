@@ -1,5 +1,6 @@
 $(function () {
   if (document.body.dataset.page !== 'orders') return;
+  if (!window.FitHubUtils.requireCustomerAccess('login.html')) return;
   window.FitHubUtils.initDataTable('#orders-table', {
     ajax: function (data, callback) {
       $.ajax({

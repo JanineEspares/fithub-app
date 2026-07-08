@@ -1,5 +1,6 @@
 $(function () {
   if (document.body.dataset.page !== 'order-details') return;
+  if (!window.FitHubUtils.requireCustomerAccess('login.html')) return;
 
   const orderId = new URLSearchParams(window.location.search).get('id');
   const content = $('#order-details-content');

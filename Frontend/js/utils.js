@@ -26,6 +26,16 @@ window.FitHubUtils = {
     localStorage.removeItem(window.FitHubConfig.tokenKey);
     localStorage.removeItem(window.FitHubConfig.userKey);
   },
+  setRedirectAfterLogin(url) {
+    if (!url) return;
+    sessionStorage.setItem('redirectAfterLogin', url);
+  },
+  getRedirectAfterLogin() {
+    return sessionStorage.getItem('redirectAfterLogin');
+  },
+  clearRedirectAfterLogin() {
+    sessionStorage.removeItem('redirectAfterLogin');
+  },
   authHeaders() {
     const token = this.getToken();
     return token ? { Authorization: `Bearer ${token}` } : {};
@@ -59,6 +69,17 @@ window.FitHubUtils = {
     const user = this.getUser();
 
     if (!user || user.role !== 'admin') {
+      window.location.replace(redirectUrl);
+      return false;
+    }
+
+    return true;
+  },
+  requireCustomerAccess(redirectUrl = 'login.html') {
+    const user = this.getUser();
+
+    if (!user || user.role !== 'customer') {
+      this.setRedirectAfterLogin(window.location.href);
       window.location.replace(redirectUrl);
       return false;
     }

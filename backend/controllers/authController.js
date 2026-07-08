@@ -169,6 +169,8 @@ exports.profile = async (req, res, next) => {
                 'first_name',
                 'last_name',
                 'email',
+                'phone_number',
+                'address',
                 'role',
                 'status',
                 'created_at',

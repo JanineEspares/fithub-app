@@ -1,37 +1,6 @@
 const cartService = require('../services/cartService');
 const apiResponse = require('../utils/apiResponse');
-
-const resolveCartVariant = async (productId, fallbackVariantId) => {
-    if (fallbackVariantId) {
-        return await db.ProductVariant.findByPk(fallbackVariantId);
-    }
-
-    if (!productId) {
-        return null;
-    }
-
-    const product = await db.Product.findByPk(productId);
-    if (!product) {
-        return null;
-    }
-
-    let variant = await db.ProductVariant.findOne({
-        where: { product_id: product.id, status: 'active' }
-    });
-
-    if (!variant) {
-        variant = await db.ProductVariant.create({
-            product_id: product.id,
-            variant_name: 'Default',
-            sku: `SKU-${product.id}-${Date.now()}`,
-            price: product.base_price,
-            stock_quantity: 100,
-            status: 'active'
-        });
-    }
-
-    return variant;
-};
+const db = require('../models');
 
 exports.getCart = async (req, res, next) => {
     try {
@@ -53,6 +22,12 @@ exports.getCart = async (req, res, next) => {
 exports.addToCart = async (req, res, next) => {
 
     try {
+        const productId = parseInt(req.body.product_id, 10);
+        const quantity = parseInt(req.body.quantity || 1, 10);
+
+        if (!productId) {
+            return apiResponse.error(res, 400, 'A valid product id is required.');
+        }
 
         let cart = await cartService.getActiveCart(req.user.id);
 
@@ -62,8 +37,8 @@ exports.addToCart = async (req, res, next) => {
 
         const item = await cartService.addItem(
             cart.id,
-            req.body.product_id,
-            req.body.quantity || 1
+            productId,
+            quantity
         );
 
         return apiResponse.success(
@@ -82,7 +57,6 @@ exports.addToCart = async (req, res, next) => {
 exports.updateCartItem = async (req, res, next) => {
 
     try {
-
         const item = await cartService.findCartItem(req.params.id);
 
         if (!item) {
@@ -93,9 +67,13 @@ exports.updateCartItem = async (req, res, next) => {
             );
         }
 
+        if (!item.cart || item.cart.user_id !== req.user.id) {
+            return apiResponse.error(res, 403, 'You do not have access to this cart item.');
+        }
+
         const updatedItem = await cartService.updateItem(
             item,
-            req.body.quantity
+            parseInt(req.body.quantity, 10)
         );
 
         return apiResponse.success(
@@ -114,7 +92,6 @@ exports.updateCartItem = async (req, res, next) => {
 exports.removeCartItem = async (req, res, next) => {
 
     try {
-
         const item = await cartService.findCartItem(req.params.id);
 
         if (!item) {
@@ -123,6 +100,10 @@ exports.removeCartItem = async (req, res, next) => {
                 404,
                 'Cart item not found.'
             );
+        }
+
+        if (!item.cart || item.cart.user_id !== req.user.id) {
+            return apiResponse.error(res, 403, 'You do not have access to this cart item.');
         }
 
         await cartService.removeItem(item);

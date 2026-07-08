@@ -7,11 +7,7 @@
 
 $(function () {
   // Check authentication
-  const user = window.FitHubUtils.getUser();
-  if (!user || user.role !== 'customer') {
-    window.location.href = 'login.html';
-    return;
-  }
+  if (!window.FitHubUtils.requireCustomerAccess('login.html')) return;
 
   // Load profile data on page load
   loadProfileData();

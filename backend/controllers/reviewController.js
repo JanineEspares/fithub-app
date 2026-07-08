@@ -30,13 +30,11 @@ exports.createReview = async (req, res, next) => {
                         user_id: req.user.id,
                         status: 'delivered'
                     }
-                },
-                {
-                    model: db.ProductVariant,
-                    as: 'productVariant',
-                    where: { product_id: productId }
                 }
-            ]
+            ],
+            where: {
+                product_id: productId
+            }
         });
 
         if (!hasPurchased) {
@@ -98,13 +96,11 @@ exports.checkEligibility = async (req, res, next) => {
                         user_id: req.user.id,
                         status: 'delivered'
                     }
-                },
-                {
-                    model: db.ProductVariant,
-                    as: 'productVariant',
-                    where: { product_id: productId }
                 }
-            ]
+            ],
+            where: {
+                product_id: productId
+            }
         });
 
         return res.json({
