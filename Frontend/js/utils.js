@@ -18,6 +18,10 @@ window.FitHubUtils = {
     const token = this.getToken();
     return token ? { Authorization: `Bearer ${token}` } : {};
   },
+  formatCurrency(amount) {
+    const value = Number(amount) || 0;
+    return `₱${value.toFixed(2)}`;
+  },
   apiRequest(url, options = {}) {
     return $.ajax({
       url: `${window.FitHubConfig.apiBaseUrl}${url}`,

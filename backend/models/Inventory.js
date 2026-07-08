@@ -9,30 +9,27 @@ module.exports = (sequelize, DataTypes) => {
             },
             product_variant_id: {
                 type: DataTypes.INTEGER,
-                allowNull: false,
-                unique: true
+                allowNull: false
             },
-            stock: {
+            current_stock: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 defaultValue: 0
             },
-            reorder_level: {
+            reserved_stock: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
-                defaultValue: 5
+                defaultValue: 0
             },
-            status: {
-                type: DataTypes.ENUM('in_stock', 'low_stock', 'out_of_stock'),
+            sold_quantity: {
+                type: DataTypes.INTEGER,
                 allowNull: false,
-                defaultValue: 'in_stock'
+                defaultValue: 0
             }
         },
         {
             tableName: 'inventory',
-            timestamps: true,
-            createdAt: 'created_at',
-            updatedAt: 'updated_at'
+            timestamps: false
         }
     );
 

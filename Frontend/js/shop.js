@@ -254,7 +254,7 @@ const FitHubShop = (() => {
         
         products.forEach(product => {
             const imageUrl = product.images && product.images.length > 0 
-                ? `${window.FitHubConfig.apiBaseUrl}/uploads/${product.images[0].image_path}`
+                ? `${window.FitHubConfig.API_URL}/uploads/${product.images[0].image_path}`
                 : '/assets/images/placeholder.png';
             
             const inStock = product.inventory && product.inventory.quantity > 0;
@@ -282,7 +282,7 @@ const FitHubShop = (() => {
                             ${product.brand ? `<small class="text-muted mb-2">${product.brand}</small>` : ''}
                             <p class="card-text text-muted small limit-lines-2 flex-grow-1">${product.description || 'No description'}</p>
                             <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top">
-                                <span class="h5 text-brand mb-0">$${parseFloat(product.base_price).toFixed(2)}</span>
+                                                <span class="h5 text-brand mb-0">${window.FitHubUtils.formatCurrency(product.base_price)}</span>
                                 <div class="btn-group btn-group-sm" role="group">
                                     <button class="btn btn-outline-secondary view-details-btn" type="button" data-product-id="${product.id}">
                                         <i class="fas fa-eye"></i>

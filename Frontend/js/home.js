@@ -19,7 +19,7 @@ $(function () {
             <div class="product-name">${product.name || 'Product'}</div>
             <div class="text-muted small">${product.brand || 'FitHub'}</div>
             <div class="text-muted small mt-2">${(product.description || 'Designed for training, recovery, and everyday fitness.').slice(0, 100)}</div>
-            <div class="product-price mt-2">$${Number(product.base_price || 0).toFixed(2)}</div>
+            <div class="product-price mt-2">${window.FitHubUtils.formatCurrency(product.base_price)}</div>
             <div class="d-flex flex-wrap gap-2 mt-3">
               <a class="btn btn-sm btn-outline-brand" href="item.html?id=${product.id}">View Details</a>
               <a class="btn btn-sm btn-brand" href="item.html?id=${product.id}">Add to Cart</a>
@@ -29,8 +29,25 @@ $(function () {
       `).join(''));
     });
   };
-
   loadProducts();
+  // Load metrics: total products and categories
+  $.ajax({ url: `${window.FitHubConfig.apiBaseUrl}/products?page=1&limit=1`, method: 'GET' })
+    .done((response) => {
+      const total = response.data && response.data.pagination ? response.data.pagination.total : (Array.isArray(response.data) ? response.data.length : 0);
+      $('#metric-products').text(total);
+    })
+    .fail(() => {
+      $('#metric-products').text('—');
+    });
+
+  $.ajax({ url: `${window.FitHubConfig.apiBaseUrl}/categories`, method: 'GET' })
+    .done((response) => {
+      const cats = Array.isArray(response.data) ? response.data.length : 0;
+      $('#metric-categories').text(cats);
+    })
+    .fail(() => {
+      $('#metric-categories').text('—');
+    });
   window.FitHubInfiniteScroll.init('#home-sentinel', () => {
     page += 1;
     return loadProducts();

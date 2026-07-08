@@ -11,6 +11,7 @@ db.Category = require('./Category')(sequelize, DataTypes);
 
 db.Product = require('./Product')(sequelize, DataTypes);
 db.ProductImage = require('./ProductImage')(sequelize, DataTypes);
+db.ProductVariant = require('./ProductVariant')(sequelize, DataTypes);
 
 db.ShippingAddress = require('./ShippingAddress')(sequelize, DataTypes);
 db.Cart = require('./Cart')(sequelize, DataTypes);
@@ -53,6 +54,28 @@ db.Product.hasMany(db.ProductImage, {
 db.ProductImage.belongsTo(db.Product, {
     foreignKey: 'product_id',
     as: 'product'
+});
+
+// Product -> Product Variants
+db.Product.hasMany(db.ProductVariant, {
+    foreignKey: 'product_id',
+    as: 'variants'
+});
+
+db.ProductVariant.belongsTo(db.Product, {
+    foreignKey: 'product_id',
+    as: 'product'
+});
+
+// ProductVariant -> Inventory
+db.ProductVariant.hasOne(db.Inventory, {
+    foreignKey: 'product_variant_id',
+    as: 'inventory'
+});
+
+db.Inventory.belongsTo(db.ProductVariant, {
+    foreignKey: 'product_variant_id',
+    as: 'variant'
 });
 
 // ========================================
@@ -172,15 +195,6 @@ db.Transaction.belongsTo(db.User, {
     as: 'user'
 });
 
-db.Product.hasOne(db.Inventory, {
-    foreignKey: 'product_id',
-    as: 'inventory'
-});
-
-db.Inventory.belongsTo(db.Product, {
-    foreignKey: 'product_id',
-    as: 'product'
-});
 
 db.User.hasMany(db.ActivityLog, {
     foreignKey: 'user_id',

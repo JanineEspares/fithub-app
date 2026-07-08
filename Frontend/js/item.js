@@ -109,7 +109,7 @@ const FitHubItem = (() => {
         // Basic Info
         elements.itemId.text(product.id);
         elements.itemName.text(product.name);
-        elements.itemPrice.text(`$${parseFloat(product.base_price).toFixed(2)}`);
+        elements.itemPrice.text(window.FitHubUtils.formatCurrency(product.base_price));
         elements.itemDescription.text(product.description || 'No description available');
         elements.brandName.text(product.brand || 'Unknown');
         elements.categoryBadge.text(product.category?.name || 'General');
@@ -310,7 +310,7 @@ const FitHubItem = (() => {
                         </div>
                         <div class="card-body">
                             <h6 class="card-title fw-bold limit-lines-2">${escapeHtml(product.name)}</h6>
-                            <p class="text-brand fw-bold mb-0">$${parseFloat(product.base_price).toFixed(2)}</p>
+                            <p class="text-brand fw-bold mb-0">${window.FitHubUtils.formatCurrency(product.base_price)}</p>
                         </div>
                     </div>
                 </div>

@@ -72,7 +72,7 @@ $(function () {
         <div class="product-name">${product.name || 'Product'}</div>
         <div class="text-muted small">${product.brand || 'FitHub'}</div>
         <div class="text-muted small mt-2">${(product.description || 'A reliable choice for training and recovery.').slice(0, 100)}</div>
-        <div class="product-price mt-2">$${Number(product.base_price || 0).toFixed(2)}</div>
+        <div class="product-price mt-2">${window.FitHubUtils.formatCurrency(product.base_price)}</div>
         <div class="d-flex flex-wrap gap-2 mt-3">
           <a class="btn btn-sm btn-outline-brand" href="item.html?id=${product.id}">View Details</a>
           <a class="btn btn-sm btn-brand" href="item.html?id=${product.id}">Add to Cart</a>
@@ -97,7 +97,7 @@ $(function () {
       columns: [
         { data: 'id' },
         { data: 'name' },
-        { data: 'base_price' },
+        { data: 'base_price', render: (val) => window.FitHubUtils.formatCurrency(val) },
         { data: 'status' },
         {
           data: null,

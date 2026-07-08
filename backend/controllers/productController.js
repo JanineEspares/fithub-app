@@ -20,13 +20,22 @@ exports.listProducts = async (req, res, next) => {
             max_price = null
         } = req.query;
 
-        const products = await productService.getAllProducts(req.query);
+        const result = await productService.searchProducts({
+            search: search || '',
+            category_id: category_id || null,
+            sort,
+            order,
+            page: parseInt(page, 10) || 1,
+            limit: parseInt(limit, 10) || 12,
+            min_price: min_price || null,
+            max_price: max_price || null
+        });
 
         return apiResponse.success(
             res,
             200,
             'Products retrieved successfully.',
-            products
+            result
         );
     } catch (err) {
         next(err);
@@ -56,11 +65,14 @@ exports.show = async (req, res, next) => {
             : 0;
 
         // Format product response
+        const inventory = product.inventory || product.variants && product.variants[0] && product.variants[0].inventory;
+        const stockQty = inventory ? (inventory.current_stock ?? inventory.stock ?? inventory.stock_quantity ?? 0) : 0;
+
         const productData = {
             ...product.toJSON(),
             average_rating: parseFloat(avgRating),
             review_count: reviews.length,
-            in_stock: product.inventory && product.inventory.quantity > 0
+            in_stock: stockQty > 0
         };
 
         return apiResponse.success(
