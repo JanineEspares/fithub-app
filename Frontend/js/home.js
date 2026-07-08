@@ -12,7 +12,14 @@ $(function () {
       url: `${window.FitHubConfig.apiBaseUrl}/products?page=${page}`,
       method: 'GET'
     }).done((response) => {
-      const products = response.data || [];
+      const payload = response?.data || {};
+      const products = Array.isArray(payload) ? payload : (payload.products || []);
+
+      if (!products.length) {
+        $('#home-products-grid').html('<div class="text-muted">No products available right now.</div>');
+        return;
+      }
+
       $('#home-products-grid').append(products.map((product) => `
         <article class="product-card">
           <div class="product-body">

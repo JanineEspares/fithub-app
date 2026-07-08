@@ -8,7 +8,8 @@ window.FitHubAutocomplete = {
       const query = $(this).val();
       if (!query || query.length < 2) return;
       window.FitHubUtils.apiRequest(`${endpoint}?q=${encodeURIComponent(query)}`).done((response) => {
-        const items = response.data || [];
+        const payload = response?.data || {};
+        const items = Array.isArray(payload) ? payload : (payload.products || []);
         $(listId).html(items.map(renderSuggestion).join(''));
       });
     });

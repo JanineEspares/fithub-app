@@ -1,10 +1,11 @@
 require('dotenv').config();
+const mailConfig = require('./config/mail');
 
 console.log({
-    MAIL_HOST: process.env.MAIL_HOST,
-    MAIL_PORT: process.env.MAIL_PORT,
-    MAIL_USER: process.env.MAIL_USER ? 'Loaded' : 'Missing',
-    MAIL_PASS: process.env.MAIL_PASS ? 'Loaded' : 'Missing'
+    MAIL_HOST: mailConfig.host,
+    MAIL_PORT: mailConfig.port,
+    MAIL_USER: mailConfig.auth.user ? 'Loaded' : 'Missing',
+    MAIL_PASS: mailConfig.auth.pass ? 'Loaded' : 'Missing'
 });
 
 const express = require('express');

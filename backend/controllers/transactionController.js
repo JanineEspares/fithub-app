@@ -130,16 +130,19 @@ exports.update = async (req, res, next) => {
             order: transaction.order
         });
 
-        await sendTransactionUpdate({
-            to: transaction.user.email,
-            subject: `FitHub Transaction Update #${transaction.id}`,
-            text: `Your transaction status is now ${transaction.status}.`,
-            html: `<p>Your transaction status is now <strong>${transaction.status}</strong>.</p>`,
-            attachments: [{
-                filename: `receipt-${transaction.id}.pdf`,
-                path: receiptPath
-            }]
-        });
+        try {
+            await sendTransactionUpdate({
+                to: transaction.user.email,
+                subject: `FitHub Transaction Update #${transaction.id}`,
+                text: `Your transaction status is now ${transaction.status}.`,
+                attachments: [{
+                    filename: `receipt-${transaction.id}.pdf`,
+                    path: receiptPath
+                }]
+            });
+        } catch (emailError) {
+            console.error('Transaction email could not be sent:', emailError.message);
+        }
 
         res.status(200).json({
             success: true,
