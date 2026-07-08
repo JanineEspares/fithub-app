@@ -31,7 +31,7 @@ const seed = require('./seed');
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-const ensureUserJwtTokenColumn = async () => {
+const ensureUserColumns = async () => {
     const queryInterface = db.sequelize.getQueryInterface();
     const tableDescription = await queryInterface.describeTable('users');
 
@@ -39,6 +39,33 @@ const ensureUserJwtTokenColumn = async () => {
         await queryInterface.addColumn('users', 'jwt_token', {
             type: require('sequelize').DataTypes.TEXT,
             allowNull: true
+        });
+    }
+
+    if (!Object.prototype.hasOwnProperty.call(tableDescription, 'phone_number')) {
+        await queryInterface.addColumn('users', 'phone_number', {
+            type: require('sequelize').DataTypes.STRING(20),
+            allowNull: true
+        });
+    }
+
+    if (!Object.prototype.hasOwnProperty.call(tableDescription, 'address')) {
+        await queryInterface.addColumn('users', 'address', {
+            type: require('sequelize').DataTypes.TEXT,
+            allowNull: true
+        });
+    }
+};
+
+const ensureProductBasePriceColumn = async () => {
+    const queryInterface = db.sequelize.getQueryInterface();
+    const tableDescription = await queryInterface.describeTable('products');
+
+    if (!Object.prototype.hasOwnProperty.call(tableDescription, 'base_price')) {
+        await queryInterface.addColumn('products', 'base_price', {
+            type: require('sequelize').DataTypes.DECIMAL(10, 2),
+            allowNull: false,
+            defaultValue: 0.00
         });
     }
 };
@@ -73,8 +100,9 @@ sequelize.authenticate()
     .then(async () => {
         console.log('Database connection established successfully.');
         await db.sequelize.sync();
+        await ensureUserColumns();
+        await ensureProductBasePriceColumn();
         await seed();
-        await ensureUserJwtTokenColumn();
         app.listen(PORT, () => {
             console.log(`Express server listening on port ${PORT}`);
         });
