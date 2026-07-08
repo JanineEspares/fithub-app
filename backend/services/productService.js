@@ -41,7 +41,16 @@ exports.getProductById = async (id) => {
         include: [
             { model: db.Category, as: 'category' },
             { model: db.ProductImage, as: 'images' },
-            { model: db.Inventory, as: 'inventory' },
+            {
+                model: db.ProductVariant,
+                as: 'variants',
+                include: [
+                    {
+                        model: db.Inventory,
+                        as: 'inventory'
+                    }
+                ]
+            },
             { model: db.Review, as: 'reviews', include: [{ model: db.User, as: 'user', attributes: ['id', 'first_name', 'last_name'] }] }
         ]
     });
